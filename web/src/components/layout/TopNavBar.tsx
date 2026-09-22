@@ -25,7 +25,7 @@ export function TopNavBar({ cohort, dataset, onSearchFocus, onGlossaryToggle }: 
           href="/"
           className="flex items-center gap-2.5 text-white shrink-0"
         >
-          <img src="/icon-192.png" width="26" height="26" alt="" aria-hidden="true" className="h-[26px] w-[26px] shrink-0" />
+          <img src="/icon-192.png?v=2" width="26" height="26" alt="" aria-hidden="true" className="h-[26px] w-[26px] shrink-0" />
           <span className="font-semibold text-[15px] tracking-tight">HistoAtlas</span>
         </a>
 
