@@ -6,7 +6,7 @@ const LEGAL_LINKS = [
 ];
 
 const MORE_LINKS = [
-  { label: 'PathCollab', href: 'https://pathcollab.io' },
+  { label: 'PathCollab', href: 'https://github.com/PABannier/PathCollab' },
   { label: 'PathView', href: 'https://github.com/PABannier/PathView' },
 ];
 
