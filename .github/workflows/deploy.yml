@@ -1,7 +1,8 @@
 name: Deploy
 
 # Builds the site, uploads the result bundles to R2 and deploys to Cloudflare Pages.
-# Needs two repository secrets: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+# Needs two repository secrets (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID) and two repository
+# variables (PUBLIC_POSTHOG_PROJECT_TOKEN, PUBLIC_POSTHOG_HOST).
 on:
   push:
     branches: [main]
@@ -25,6 +26,9 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      # Public by design (embedded in every page); locally these come from web/.env
+      PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.PUBLIC_POSTHOG_PROJECT_TOKEN }}
+      PUBLIC_POSTHOG_HOST: ${{ vars.PUBLIC_POSTHOG_HOST }}
     steps:
       - uses: actions/checkout@v4
 

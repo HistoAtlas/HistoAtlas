@@ -13,6 +13,12 @@ mkdir -p ../visual_assets/bundles
 
 npm run build
 
+# A build without the analytics settings silently ships a broken snippet
+grep -q 'apiHost = "https://' dist/index.html || {
+  echo 'PUBLIC_POSTHOG_HOST is not set (web/.env locally, repository variables in CI)' >&2
+  exit 1
+}
+
 # 1. Result bundles live on R2: the full atlas exceeds Pages' 25 MiB per-file limit.
 #    The site displays the sizes in dist/downloads/sizes.json, written by this same build.
 node scripts/check-bundles.mjs dist/downloads
