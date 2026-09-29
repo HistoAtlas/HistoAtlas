@@ -9,9 +9,10 @@ import { useGlobalSearch } from '../hooks/useGlobalSearch';
 interface GlobalNavProps {
   cohort: string;
   dataset: string;
+  pathname: string;
 }
 
-function GlobalNavContent({ cohort, dataset }: GlobalNavProps) {
+function GlobalNavContent({ cohort, dataset, pathname }: GlobalNavProps) {
   const search = useGlobalSearch();
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
 
@@ -36,6 +37,7 @@ function GlobalNavContent({ cohort, dataset }: GlobalNavProps) {
       <TopNavBar
         cohort={cohort}
         dataset={dataset}
+        pathname={pathname}
         onSearchFocus={handleSearchFocus}
         onGlossaryToggle={handleGlossaryToggle}
       />
@@ -48,10 +50,10 @@ function GlobalNavContent({ cohort, dataset }: GlobalNavProps) {
   );
 }
 
-export function GlobalNavIsland({ cohort, dataset }: GlobalNavProps) {
+export function GlobalNavIsland({ cohort, dataset, pathname }: GlobalNavProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <GlobalNavContent cohort={cohort} dataset={dataset} />
+      <GlobalNavContent cohort={cohort} dataset={dataset} pathname={pathname} />
     </QueryClientProvider>
   );
 }

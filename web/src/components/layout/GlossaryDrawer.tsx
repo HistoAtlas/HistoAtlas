@@ -112,16 +112,16 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
         className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-200 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
-        style={{ top: '64px' }}
+        style={{ top: '52px' }}
         onClick={onClose}
       />
 
       {/* Drawer panel */}
       <div
-        className={`fixed inset-x-0 z-40 bg-zinc-900 border-b border-zinc-700/50 transition-transform duration-200 ease-out ${
-          isOpen ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed inset-x-0 z-40 bg-white shadow-lg border-b border-zinc-200 transition-[transform,visibility] duration-200 ease-out ${
+          isOpen ? 'translate-y-0' : '-translate-y-full invisible'
         }`}
-        style={{ top: '64px', maxHeight: '70vh' }}
+        style={{ top: '52px', maxHeight: '70vh' }}
         role="dialog"
         aria-modal="true"
         aria-label="Feature glossary"
@@ -142,7 +142,7 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder="Filter features by name, description, or formula..."
                 aria-label="Filter features"
-                className="w-full h-9 pl-9 pr-3 bg-zinc-800 border border-zinc-700 rounded-md text-sm text-zinc-200 placeholder:text-zinc-500 outline-none focus:border-zinc-500 transition-colors"
+                className="w-full h-9 pl-9 pr-3 bg-zinc-100 border border-zinc-200 rounded-md text-sm text-zinc-900 placeholder:text-zinc-500 outline-none focus:border-zinc-500 transition-colors"
               />
             </div>
             <span className="text-xs text-zinc-500 tabular-nums shrink-0">
@@ -150,7 +150,7 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
             </span>
             <button
               onClick={onClose}
-              className="h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-zinc-200 transition-colors rounded-md hover:bg-zinc-800"
+              className="h-9 w-9 flex items-center justify-center text-zinc-600 hover:text-zinc-900 transition-colors rounded-md hover:bg-zinc-100"
               aria-label="Close glossary"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -174,7 +174,7 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                   className="text-zinc-500 shrink-0"
                 />
                 <Icon name="info" size={12} className="text-zinc-500 shrink-0" />
-                <span className="text-[11px] uppercase tracking-wide font-medium text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                <span className="text-[11px] uppercase tracking-wide font-medium text-zinc-500 group-hover:text-zinc-700 transition-colors">
                   Notation
                 </span>
               </button>
@@ -184,7 +184,7 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                   {NOTATION_LEGEND.map((category) => (
                     <div
                       key={category.label}
-                      className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg px-4 py-3"
+                      className="bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3"
                     >
                       <h4 className="text-[10px] uppercase tracking-wide font-medium text-zinc-500 mb-2">
                         {category.label}
@@ -193,9 +193,9 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                         {category.entries.map((entry) => (
                           <div key={entry.symbol} className="flex items-baseline gap-3">
                             <span className="shrink-0 w-24 text-right">
-                              <Equation tex={entry.tex} className="text-zinc-300" />
+                              <Equation tex={entry.tex} className="text-zinc-700" />
                             </span>
-                            <span className="text-xs text-zinc-400">{entry.definition}</span>
+                            <span className="text-xs text-zinc-600">{entry.definition}</span>
                           </div>
                         ))}
                       </div>
@@ -225,10 +225,10 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                         size={12}
                         className="text-zinc-500 shrink-0"
                       />
-                      <span className="text-[11px] uppercase tracking-wide font-medium text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                      <span className="text-[11px] uppercase tracking-wide font-medium text-zinc-500 group-hover:text-zinc-700 transition-colors">
                         {section.label}
                       </span>
-                      <span className="text-[10px] text-zinc-600">
+                      <span className="text-[10px] text-zinc-500">
                         ({section.features.length})
                       </span>
                     </button>
@@ -239,18 +239,18 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                         {section.features.map((feature) => (
                           <div
                             key={feature.id}
-                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg px-4 py-3"
+                            className="bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3"
                           >
                             {/* Top row: name + badges */}
                             <div className="flex items-start gap-2 mb-2">
-                              <span className="text-sm font-medium text-zinc-200 leading-tight flex-1">
+                              <span className="text-sm font-medium text-zinc-900 leading-tight flex-1">
                                 {feature.displayName}
                               </span>
-                              <span className="text-[10px] bg-zinc-800 border border-zinc-700 rounded px-1.5 py-0.5 text-zinc-400 shrink-0">
+                              <span className="text-[10px] bg-zinc-100 border border-zinc-200 rounded px-1.5 py-0.5 text-zinc-600 shrink-0">
                                 {feature.unit}
                               </span>
                               {feature.optional && (
-                                <span className="text-[10px] bg-amber-900/30 border border-amber-700/40 rounded px-1.5 py-0.5 text-amber-400 shrink-0">
+                                <span className="text-[10px] bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 text-amber-700 shrink-0">
                                   optional
                                 </span>
                               )}
@@ -260,12 +260,12 @@ export function GlossaryDrawer({ isOpen, onClose }: GlossaryDrawerProps) {
                             <div className="mb-2">
                               <Equation
                                 tex={feature.formula}
-                                className="text-zinc-300"
+                                className="text-zinc-700"
                               />
                             </div>
 
                             {/* Description */}
-                            <p className="text-sm text-zinc-400 leading-relaxed">
+                            <p className="text-sm text-zinc-600 leading-relaxed">
                               {feature.description}
                             </p>
                           </div>

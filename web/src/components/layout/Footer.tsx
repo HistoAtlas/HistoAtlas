@@ -6,7 +6,7 @@ const LEGAL_LINKS = [
 ];
 
 const MORE_LINKS = [
-  { label: 'PathCollab', href: 'https://pathcollab.io' },
+  { label: 'PathCollab', href: 'https://github.com/PABannier/PathCollab' },
   { label: 'PathView', href: 'https://github.com/PABannier/PathView' },
 ];
 
@@ -21,13 +21,13 @@ function CohortList() {
     <div className="space-y-3">
       {tcgaIds.length > 0 && (
         <div>
-          <div className="text-[10px] uppercase tracking-wider text-zinc-600 mb-1">TCGA</div>
+          <div className="text-[10px] uppercase tracking-wider text-zinc-500 mb-1">TCGA</div>
           <ul className="columns-2 gap-x-4 text-xs space-y-1.5">
             {tcgaIds.map((id) => (
               <li key={id}>
                 <a
                   href={`/tcga/${id}/atlas/`}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
                   {id}
                 </a>
@@ -38,13 +38,13 @@ function CohortList() {
       )}
       {cptacIds.length > 0 && (
         <div>
-          <div className="text-[10px] uppercase tracking-wider text-zinc-600 mb-1">CPTAC</div>
+          <div className="text-[10px] uppercase tracking-wider text-zinc-500 mb-1">CPTAC</div>
           <ul className="columns-2 gap-x-4 text-xs space-y-1.5">
             {cptacIds.map((id) => (
               <li key={id}>
                 <a
                   href={`/cptac/${id}/atlas/`}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
                   {id}
                 </a>
@@ -59,28 +59,28 @@ function CohortList() {
 
 export function Footer() {
   return (
-    <footer className="bg-zinc-900 text-zinc-400 mt-auto">
+    <footer className="bg-white border-t border-zinc-200 text-zinc-600 mt-auto">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           {/* Branding */}
           <div>
-            <a href="/" className="flex items-center gap-2.5 text-white mb-3">
+            <a href="/" className="flex items-center gap-2.5 text-zinc-900 mb-3">
               <img src="/icon-192.png?v=2" width="22" height="22" alt="" aria-hidden="true" className="h-[22px] w-[22px] shrink-0" />
               <span className="font-semibold text-sm">HistoAtlas</span>
             </a>
-            <p className="text-xs text-zinc-500 leading-relaxed mb-4">
+            <p className="text-xs text-zinc-600 leading-relaxed mb-4">
               A morphological atlas of solid tumors from TCGA and CPTAC whole-slide images.
             </p>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-600">
               &copy; {new Date().getFullYear()} HistoAtlas
             </p>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-zinc-600 mt-1">
               Made by{' '}
               <a
-                href="https://x.com/el_pa_b"
+                href="https://pab.me"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-white transition-colors"
+                rel="noopener"
+                className="text-zinc-700 hover:text-zinc-900 transition-colors"
               >
                 Pierre-Antoine Bannier
               </a>
@@ -89,7 +89,7 @@ export function Footer() {
 
           {/* Cohorts */}
           <div>
-            <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider mb-3">
               Cohorts
             </h4>
             <CohortList />
@@ -97,7 +97,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider mb-3">
               Legal
             </h4>
             <ul className="text-xs space-y-1.5">
@@ -105,7 +105,7 @@ export function Footer() {
                 <li key={link.to}>
                   <a
                     href={link.to}
-                    className="text-zinc-500 hover:text-white transition-colors"
+                    className="text-zinc-600 hover:text-zinc-900 transition-colors"
                   >
                     {link.label}
                   </a>
@@ -116,7 +116,7 @@ export function Footer() {
 
           {/* More */}
           <div>
-            <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider mb-3">
               More
             </h4>
             <ul className="text-xs space-y-1.5">
@@ -126,7 +126,7 @@ export function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-500 hover:text-white transition-colors"
+                    className="text-zinc-600 hover:text-zinc-900 transition-colors"
                   >
                     {link.label}
                   </a>
