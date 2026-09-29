@@ -11,6 +11,7 @@ const CONTENT_TYPES: Record<string, string> = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
+  '.zip': 'application/zip',
 };
 
 function getContentType(key: string): string {
@@ -38,7 +39,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     'Content-Type',
     object.httpMetadata?.contentType || getContentType(key),
   );
-  headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+  // Tiles never change; result bundles are replaced on every deploy
+  const isDownload = key.startsWith('bundles/downloads/');
+  headers.set('Cache-Control', isDownload ? 'public, max-age=300' : 'public, max-age=31536000, immutable');
+  if (isDownload) headers.set('Content-Length', String(object.size));
 
   return new Response(object.body, { headers });
 };

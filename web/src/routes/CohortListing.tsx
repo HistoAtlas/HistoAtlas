@@ -8,7 +8,7 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { useDatasets, type Dataset } from '../hooks/useDatasets';
 import type { CohortSummary } from '../hooks/useCohortSummary';
 import { apiPaths } from '../api/paths';
-import { bundleSizesUrl, bundleUrl, downloadAllBundles } from '../lib/bundleUrls';
+import { bundleSizesUrl, bundleUrl, fullBundleUrl } from '../lib/bundleUrls';
 import { COHORT_FULL_NAMES } from '../data/cohortNames';
 import { ORGAN_SYSTEMS, ORGAN_BY_ID, CANCER_TYPES, typeKey, type OrganId } from '../data/organSystems';
 
@@ -268,14 +268,6 @@ export function CohortListing() {
     () => cohortRows.map((r) => ({ ...r, bundleBytes: sizes?.[`${r.dataset}/${r.id}`] ?? 0 })),
     [cohortRows, sizes],
   );
-  const [progress, setProgress] = useState<number | null>(null);
-  const downloadAtlas = () => {
-    window.posthog?.capture('bundle_downloaded', { dataset: 'all', cohort: 'all' });
-    setProgress(0);
-    downloadAllBundles(rows, setProgress)
-      .catch((e) => window.alert(e.message))
-      .finally(() => setProgress(null));
-  };
   const [sort, setSort] = useState<SortOption>('slides');
   const [selectedDatasets, setSelectedDatasets] = useState<Set<string>>(new Set());
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set());
@@ -346,7 +338,6 @@ export function CohortListing() {
   }).filter((g) => g.items.length > 0);
 
   const totalSlides = datasets?.reduce((sum, d) => sum + d.slideCount, 0) ?? 0;
-  const atlasSizeBytes = rows.reduce((sum, r) => sum + r.bundleBytes, 0);
   const activeFilterCount = selectedDatasets.size + selectedTypes.size;
   const clearAll = () => {
     setSelectedDatasets(new Set());
@@ -537,18 +528,16 @@ export function CohortListing() {
                 <StatItem label="Cancer types" value={typeStats.size} />
                 <StatItem label="Sources" value={datasets?.length ?? 0} />
               </dl>
-              <button
-                type="button"
-                disabled={progress != null}
-                onClick={downloadAtlas}
-                className="flex items-center gap-2 h-[38px] px-4 rounded-md bg-blue-600 text-white font-medium text-[13.5px] cursor-pointer hover:bg-blue-700 disabled:cursor-progress focus-ring"
+              <a
+                href={fullBundleUrl}
+                download="histoatlas.zip"
+                onClick={() => window.posthog?.capture('bundle_downloaded', { dataset: 'all', cohort: 'all' })}
+                className="flex items-center gap-2 h-[38px] px-4 rounded-md bg-blue-600 text-white font-medium text-[13.5px] hover:bg-blue-700 focus-ring"
               >
                 <Icon name="download" size={15} />
-                {progress == null ? 'Download full atlas' : 'Preparing…'}
-                <span className="opacity-85 tabular-nums">
-                  {progress == null ? formatSize(atlasSizeBytes) : `${progress} / ${rows.length}`}
-                </span>
-              </button>
+                Download full atlas
+                <span className="opacity-85 tabular-nums">{formatSize(sizes?.all ?? 0)}</span>
+              </a>
             </div>
           )}
         </div>

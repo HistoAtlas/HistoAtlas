@@ -1,6 +1,7 @@
 /**
  * Downloadable result bundles, built from the static API at build time (Node only).
- * One zip of CSV tables per cohort.
+ * One zip of CSV tables per cohort, plus one zip with every cohort.
+ * The zips are uploaded to R2 at deploy time (scripts/deploy.sh); only sizes.json ships with the site.
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { strToU8, zipSync } from 'fflate';
@@ -145,15 +146,26 @@ function cohortFiles(dataset: string, cohort: string): Files {
   return files;
 }
 
-export function cohortBundle(dataset: string, cohort: string): Uint8Array {
-  const key = `${dataset}/${cohort}`;
-  if (!zipCache.has(key)) zipCache.set(key, zipSync(cohortFiles(dataset, cohort), { level: 9 }));
+// Fixed timestamp, so rebuilding unchanged data gives byte-identical archives
+const ZIP_OPTIONS = { level: 9, mtime: new Date(2026, 0, 1) } as const;
+
+function zipped(key: string, build: () => Record<string, Files> | Files): Uint8Array {
+  if (!zipCache.has(key)) zipCache.set(key, zipSync(build(), ZIP_OPTIONS));
   return zipCache.get(key)!;
 }
 
-/** Bundle sizes in bytes, keyed by `<dataset>/<cohort>`. */
+export const cohortBundle = (dataset: string, cohort: string) =>
+  zipped(`${dataset}/${cohort}`, () => cohortFiles(dataset, cohort));
+
+/** Every cohort, as `<dataset>/<cohort>/<table>.csv`. */
+export const fullBundle = () =>
+  zipped('all', () =>
+    Object.fromEntries(listCohorts().map(({ dataset, cohort }) => [`${dataset}/${cohort}`, cohortFiles(dataset, cohort)])),
+  );
+
+/** Bundle sizes in bytes, keyed by `<dataset>/<cohort>`, plus `all`. */
 export function bundleSizes(): Record<string, number> {
-  const sizes: Record<string, number> = {};
+  const sizes: Record<string, number> = { all: fullBundle().byteLength };
   for (const { dataset, cohort } of listCohorts()) sizes[`${dataset}/${cohort}`] = cohortBundle(dataset, cohort).byteLength;
   return sizes;
 }
