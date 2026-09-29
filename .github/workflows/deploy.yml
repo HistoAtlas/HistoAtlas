@@ -39,8 +39,9 @@ jobs:
       - name: Fetch the static API from R2
         run: scripts/data.sh pull
 
+      # astro sync generates the content-collection types that tsc needs
       - name: Typecheck
-        run: npx tsc --noEmit -p .
+        run: npx astro sync && npx tsc --noEmit -p .
 
       - name: Build, upload bundles, deploy, verify
         run: scripts/deploy.sh
