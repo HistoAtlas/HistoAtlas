@@ -30,6 +30,48 @@
   --transition-base: 200ms;
 }
 
+/* Dark theme: remap the palette so existing utility classes follow the theme.
+   Neutrals are the zinc scale inverted; accents move to their lighter shades. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-white: #18181b;
+  --color-zinc-50: #09090b;
+  --color-zinc-100: #27272a;
+  --color-zinc-200: #3f3f46;
+  --color-zinc-300: #52525b;
+  --color-zinc-400: #71717a;
+  --color-zinc-500: #a1a1aa;
+  --color-zinc-600: #d4d4d8;
+  --color-zinc-700: #e4e4e7;
+  --color-zinc-800: #f4f4f5;
+  --color-zinc-900: #fafafa;
+  --color-zinc-950: #ffffff;
+
+  --color-blue-50: rgb(96 165 250 / 0.14);
+  --color-blue-500: #60a5fa;
+  --color-blue-600: #60a5fa;
+  --color-blue-700: #93c5fd;
+
+  --color-green-50: rgb(74 222 128 / 0.14);
+  --color-green-200: rgb(74 222 128 / 0.3);
+  --color-green-700: #4ade80;
+  --color-amber-50: rgb(251 191 36 / 0.14);
+  --color-amber-200: rgb(251 191 36 / 0.3);
+  --color-amber-700: #fbbf24;
+  --color-red-50: rgb(248 113 113 / 0.14);
+  --color-red-200: rgb(248 113 113 / 0.3);
+  --color-red-600: #f87171;
+  --color-red-700: #f87171;
+
+  /* Organ-system dots */
+  --color-pink-700: #f472b6;
+  --color-violet-700: #a78bfa;
+  --color-teal-700: #2dd4bf;
+  --color-lime-700: #a3e635;
+  --color-sky-700: #38bdf8;
+}
+
 /* Base styles */
 html {
   font-family: var(--font-family-sans);

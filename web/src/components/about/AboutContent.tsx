@@ -30,7 +30,7 @@ function CopyButton({ text }: { text: string }) {
 /*  BibTeX                                                             */
 /* ------------------------------------------------------------------ */
 
-const BIBTEX = `@misc{bannier2026histoatlaspancancermorphologyatlas,
+export const BIBTEX = `@misc{bannier2026histoatlaspancancermorphologyatlas,
   title         = {HistoAtlas: A Pan-Cancer Morphology Atlas Linking Histomics to Molecular Programs and Clinical Outcomes},
   author        = {Pierre-Antoine Bannier},
   year          = {2026},
