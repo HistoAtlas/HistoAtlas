@@ -8,6 +8,9 @@ BUCKET=histoatlas-assets
 PREFIX=bundles/downloads            # served at /bundles/downloads/* by functions/bundles
 SITE=${SITE:-https://histoatlas.com}
 
+# public/bundles is a symlink to local tile assets; the build needs its target to exist
+mkdir -p ../visual_assets/bundles
+
 npm run build
 
 # 1. Result bundles live on R2: the full atlas exceeds Pages' 25 MiB per-file limit.
