@@ -77,9 +77,9 @@ export function Footer() {
             <p className="text-xs text-zinc-600 mt-1">
               Made by{' '}
               <a
-                href="https://x.com/el_pa_b"
+                href="https://pab.me"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
                 className="text-zinc-700 hover:text-zinc-900 transition-colors"
               >
                 Pierre-Antoine Bannier
