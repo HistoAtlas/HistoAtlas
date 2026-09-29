@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 
 import { BIBTEX } from '../components/about/AboutContent';
 import { EmptyState, NoResultsIcon } from '../components/ui/EmptyState';
@@ -8,6 +8,7 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { useDatasets, type Dataset } from '../hooks/useDatasets';
 import type { CohortSummary } from '../hooks/useCohortSummary';
 import { apiPaths } from '../api/paths';
+import { bundleSizesUrl, bundleUrl, downloadAllBundles } from '../lib/bundleUrls';
 import { COHORT_FULL_NAMES } from '../data/cohortNames';
 import { ORGAN_SYSTEMS, ORGAN_BY_ID, CANCER_TYPES, typeKey, type OrganId } from '../data/organSystems';
 
@@ -22,6 +23,8 @@ interface CohortRow extends CohortSummary {
   types: string[];
   organs: OrganId[];
   version: string;
+  /** Size of the downloadable results bundle; 0 until known. */
+  bundleBytes: number;
 }
 
 type SortOption = 'slides' | 'name' | 'type' | 'source' | 'updated';
@@ -45,7 +48,7 @@ const COMPARATORS: Record<SortOption, (a: CohortRow, b: CohortRow) => number> = 
 };
 
 const formatSize = (bytes: number) =>
-  bytes >= 1e9 ? `${(bytes / 1e9).toFixed(1)} GB` : `${Math.round(bytes / 1e6)} MB`;
+  bytes === 0 ? '…' : `${(bytes / 1e6).toFixed(bytes < 1e7 ? 1 : 0)} MB`;
 
 const formatDate = (iso: string | null) =>
   iso
@@ -79,6 +82,7 @@ function toRows(datasets: Dataset[], summaries: (CohortSummary[] | undefined)[])
         types,
         organs,
         version: dataVersion(c),
+        bundleBytes: 0,
       };
     });
   });
@@ -189,7 +193,7 @@ function CohortRowLink({ row }: { row: CohortRow }) {
           {row.isPan && ` · ${row.types.length} cancer types`}
           {` · ${row.patientCount.toLocaleString()} patients`}
           <span className="hidden md:inline"> · {row.clusterCount} clusters</span>
-          <span className="md:hidden"> · {formatSize(row.resultSizeBytes)}</span>
+          <span className="md:hidden"> · {formatSize(row.bundleBytes)}</span>
         </div>
       </div>
       <div className="hidden md:flex items-center gap-2 min-w-0">
@@ -206,25 +210,26 @@ function CohortRowLink({ row }: { row: CohortRow }) {
         className="hidden md:block text-right"
         title={`Results data · version v${row.version} · updated ${formatDate(row.updatedAt)}`}
       >
-        <div className="tabular-nums text-zinc-700">{formatSize(row.resultSizeBytes)}</div>
+        <div className="tabular-nums text-zinc-700">{formatSize(row.bundleBytes)}</div>
         <div className="text-[11.5px] text-zinc-500 tabular-nums">{formatDate(row.updatedAt)}</div>
       </div>
     </a>
   );
 }
 
-/** Download target is not wired yet: the button is in place for when the bundles exist. */
 function DownloadButton({ row }: { row: CohortRow }) {
-  const size = formatSize(row.resultSizeBytes);
+  const size = formatSize(row.bundleBytes);
   return (
     <div className="relative hidden md:flex items-center pr-4">
-      <button
-        type="button"
+      <a
+        href={bundleUrl(row.dataset, row.id)}
+        download={`histoatlas_${row.dataset}_${row.id}.zip`}
         aria-label={`Download ${row.code} results, ${size}`}
+        onClick={() => window.posthog?.capture('bundle_downloaded', { dataset: row.dataset, cohort: row.id })}
         className="peer w-8 h-8 flex items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 cursor-pointer hover:text-zinc-900 hover:border-zinc-500 focus-ring"
       >
         <Icon name="download" size={15} />
-      </button>
+      </a>
       <span
         role="tooltip"
         className="hidden peer-hover:block peer-focus-visible:block absolute right-14 top-1/2 -translate-y-1/2 z-10 bg-zinc-900 text-zinc-50 text-xs px-2.5 py-1.5 rounded-md whitespace-nowrap pointer-events-none"
@@ -253,7 +258,24 @@ function RowsSkeleton() {
 
 export function CohortListing() {
   const { data: datasets } = useDatasets();
-  const { data: rows, isLoading, error } = useAllCohorts(datasets);
+  const { data: cohortRows, isLoading, error } = useAllCohorts(datasets);
+  const { data: sizes } = useQuery<Record<string, number>>({
+    queryKey: ['bundle-sizes'],
+    queryFn: () => fetch(bundleSizesUrl).then((res) => res.json()),
+    staleTime: Infinity,
+  });
+  const rows = useMemo(
+    () => cohortRows.map((r) => ({ ...r, bundleBytes: sizes?.[`${r.dataset}/${r.id}`] ?? 0 })),
+    [cohortRows, sizes],
+  );
+  const [progress, setProgress] = useState<number | null>(null);
+  const downloadAtlas = () => {
+    window.posthog?.capture('bundle_downloaded', { dataset: 'all', cohort: 'all' });
+    setProgress(0);
+    downloadAllBundles(rows, setProgress)
+      .catch((e) => window.alert(e.message))
+      .finally(() => setProgress(null));
+  };
   const [sort, setSort] = useState<SortOption>('slides');
   const [selectedDatasets, setSelectedDatasets] = useState<Set<string>>(new Set());
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set());
@@ -324,7 +346,7 @@ export function CohortListing() {
   }).filter((g) => g.items.length > 0);
 
   const totalSlides = datasets?.reduce((sum, d) => sum + d.slideCount, 0) ?? 0;
-  const atlasSizeBytes = rows.filter((r) => r.isPan).reduce((sum, r) => sum + r.resultSizeBytes, 0);
+  const atlasSizeBytes = rows.reduce((sum, r) => sum + r.bundleBytes, 0);
   const activeFilterCount = selectedDatasets.size + selectedTypes.size;
   const clearAll = () => {
     setSelectedDatasets(new Set());
@@ -515,14 +537,17 @@ export function CohortListing() {
                 <StatItem label="Cancer types" value={typeStats.size} />
                 <StatItem label="Sources" value={datasets?.length ?? 0} />
               </dl>
-              {/* Download target is not wired yet */}
               <button
                 type="button"
-                className="flex items-center gap-2 h-[38px] px-4 rounded-md bg-blue-600 text-white font-medium text-[13.5px] cursor-pointer hover:bg-blue-700 focus-ring"
+                disabled={progress != null}
+                onClick={downloadAtlas}
+                className="flex items-center gap-2 h-[38px] px-4 rounded-md bg-blue-600 text-white font-medium text-[13.5px] cursor-pointer hover:bg-blue-700 disabled:cursor-progress focus-ring"
               >
                 <Icon name="download" size={15} />
-                Download full atlas
-                <span className="opacity-85 tabular-nums">{formatSize(atlasSizeBytes)}</span>
+                {progress == null ? 'Download full atlas' : 'Preparing…'}
+                <span className="opacity-85 tabular-nums">
+                  {progress == null ? formatSize(atlasSizeBytes) : `${progress} / ${rows.length}`}
+                </span>
               </button>
             </div>
           )}

@@ -7,7 +7,6 @@ export interface CohortSummary {
   slideCount: number;
   patientCount: number;
   /** Total size of the cohort's precomputed result files served by the API. */
-  resultSizeBytes: number;
   /** ISO date (YYYY-MM-DD) the cohort's analysis run completed. */
   updatedAt: string | null;
   clusterCount: number;

@@ -4,6 +4,7 @@ import { useAtlasStore } from '../stores/atlasStore';
 import { useAtlasData } from '../hooks/useAtlasData';
 import { useAtlasURLSync } from '../hooks/useAtlasURLSync';
 import { useCohorts } from '../hooks/useCohorts';
+import { bundleUrl } from '../lib/bundleUrls';
 import { filterSlides, sortSlides, paginateSlides } from '../lib/filtering';
 import { COHORT_FULL_NAMES } from '../data/cohortNames';
 import { organOf } from '../data/organSystems';
@@ -255,14 +256,15 @@ export function AtlasView({ dataset = 'tcga', cohort = 'PANCAN', keyFeatures: ke
           <Icon name="info" size={14} />
           {about ? 'Hide cohort info' : 'Cohort info'}
         </button>
-        <button
-          type="button"
-          onClick={() => setDownload(slides)}
-          className="flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue-600 text-white text-[13px] font-medium whitespace-nowrap cursor-pointer"
+        <a
+          href={bundleUrl(dataset, cohort)}
+          download={`histoatlas_${dataset}_${cohort}.zip`}
+          onClick={() => window.posthog?.capture('bundle_downloaded', { dataset, cohort })}
+          className="flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue-600 text-white text-[13px] font-medium whitespace-nowrap"
         >
           <Icon name="download" size={14} />
           Download cohort
-        </button>
+        </a>
       </Slot>
 
       <Slot id="atlas-stats-slot">
