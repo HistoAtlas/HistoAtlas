@@ -1,0 +1,67 @@
+{
+  "projectId": "913cda6a-5e65-4c7c-bb38-f6ae71a6578c",
+  "pkg": "web",
+  "globalName": "HistoAtlasUI",
+  "shape": "package",
+  "entry": ".design-sync/entry.ts",
+  "buildCmd": "node .design-sync/build-css.mjs",
+  "srcDir": "src/components/ui",
+  "cssEntry": ".design-sync/.cache/ds.css",
+  "provider": {
+    "component": "QueryClientProvider",
+    "props": {
+      "client": {
+        "$ref": "queryClient"
+      }
+    }
+  },
+  "componentSrcMap": {
+    "AssumptionChecks": "src/components/ui/AssumptionChecks.tsx",
+    "EmptyState": "src/components/ui/EmptyState.tsx",
+    "NoResultsIcon": "src/components/ui/EmptyState.tsx",
+    "NoSelectionIcon": "src/components/ui/EmptyState.tsx",
+    "EvidenceBadge": "src/components/ui/EvidenceBadge.tsx",
+    "ExportActions": "src/components/ui/ExportActions.tsx",
+    "Icon": "src/components/ui/Icon.tsx",
+    "InfoTooltip": "src/components/ui/InfoTooltip.tsx",
+    "MiniHistogram": "src/components/ui/MiniHistogram.tsx",
+    "PageHeader": "src/components/ui/PageHeader.tsx",
+    "PillToggle": "src/components/ui/PillToggle.tsx",
+    "ProvenanceBar": "src/components/ui/ProvenanceBar.tsx",
+    "SectionCard": "src/components/ui/SectionCard.tsx",
+    "SegmentedControl": "src/components/ui/SegmentedControl.tsx",
+    "Skeleton": "src/components/ui/Skeleton.tsx",
+    "SkeletonRow": "src/components/ui/Skeleton.tsx",
+    "SkeletonTable": "src/components/ui/Skeleton.tsx",
+    "StatsCard": "src/components/ui/StatsCard.tsx",
+    "SignificanceBadge": "src/components/ui/SurvivalBadges.tsx",
+    "CliffsDeltaBadge": "src/components/ui/SurvivalBadges.tsx",
+    "PhBadge": "src/components/ui/SurvivalBadges.tsx",
+    "HrBadge": "src/components/ui/SurvivalBadges.tsx",
+    "PValueBadge": "src/components/ui/SurvivalBadges.tsx",
+    "TabNav": "src/components/ui/TabNav.tsx",
+    "ToolbarSelect": "src/components/ui/ToolbarSelect.tsx"
+  },
+  "guidelinesGlob": [],
+  "overrides": {
+    "AssumptionChecks": {
+      "cardMode": "column"
+    },
+    "ProvenanceBar": {
+      "cardMode": "column"
+    },
+    "SectionCard": {
+      "cardMode": "column"
+    },
+    "SkeletonRow": {
+      "cardMode": "column"
+    },
+    "SkeletonTable": {
+      "cardMode": "column"
+    },
+    "TabNav": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
