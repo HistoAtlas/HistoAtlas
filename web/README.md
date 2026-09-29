@@ -77,5 +77,8 @@ The workflow needs two repository secrets:
 - `CLOUDFLARE_API_TOKEN`: a token with **Cloudflare Pages: Edit** and **Workers R2 Storage: Edit**.
 - `CLOUDFLARE_ACCOUNT_ID`
 
+It also needs two repository variables for analytics, `PUBLIC_POSTHOG_PROJECT_TOKEN` and
+`PUBLIC_POSTHOG_HOST` (locally they come from `web/.env`). The deploy stops if they are missing.
+
 Locally, `npx wrangler login` is enough. During `npm run dev` the bundles are built on request at
 `/downloads/...`; no R2 access is needed.
