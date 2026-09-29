@@ -9,50 +9,7 @@ import { useDatasets, type Dataset } from '../hooks/useDatasets';
 import type { CohortSummary } from '../hooks/useCohortSummary';
 import { apiPaths } from '../api/paths';
 import { COHORT_FULL_NAMES } from '../data/cohortNames';
-
-const ORGAN_SYSTEMS = [
-  { id: 'gi', label: 'Gastrointestinal', dot: 'bg-amber-700' },
-  { id: 'gyn', label: 'Breast & gynecologic', dot: 'bg-pink-700' },
-  { id: 'gu', label: 'Genitourinary', dot: 'bg-violet-700' },
-  { id: 'thor', label: 'Thoracic', dot: 'bg-teal-700' },
-  { id: 'endo', label: 'Endocrine', dot: 'bg-lime-700' },
-  { id: 'hn', label: 'Head & neck', dot: 'bg-sky-700' },
-] as const;
-
-type OrganId = (typeof ORGAN_SYSTEMS)[number]['id'];
-
-const ORGAN_BY_ID = Object.fromEntries(ORGAN_SYSTEMS.map((o) => [o.id, o])) as Record<
-  OrganId,
-  (typeof ORGAN_SYSTEMS)[number]
->;
-
-/** Short filter label and organ system per cancer type. */
-const CANCER_TYPES: Record<string, { label: string; organ: OrganId }> = {
-  ACC: { label: 'Adrenocortical', organ: 'endo' },
-  BLCA: { label: 'Bladder urothelial', organ: 'gu' },
-  BRCA: { label: 'Breast invasive', organ: 'gyn' },
-  CESC: { label: 'Cervical SCC', organ: 'gyn' },
-  CHOL: { label: 'Cholangiocarcinoma', organ: 'gi' },
-  COAD: { label: 'Colon adeno.', organ: 'gi' },
-  ESCA: { label: 'Esophageal', organ: 'gi' },
-  HNSC: { label: 'Head & neck SCC', organ: 'hn' },
-  LIHC: { label: 'Liver HCC', organ: 'gi' },
-  LUAD: { label: 'Lung adeno.', organ: 'thor' },
-  LUSC: { label: 'Lung SCC', organ: 'thor' },
-  MESO: { label: 'Mesothelioma', organ: 'thor' },
-  OV: { label: 'Ovarian serous', organ: 'gyn' },
-  PAAD: { label: 'Pancreatic adeno.', organ: 'gi' },
-  PRAD: { label: 'Prostate adeno.', organ: 'gu' },
-  READ: { label: 'Rectal adeno.', organ: 'gi' },
-  STAD: { label: 'Stomach adeno.', organ: 'gi' },
-  THCA: { label: 'Thyroid', organ: 'endo' },
-  THYM: { label: 'Thymoma', organ: 'thor' },
-  UCEC: { label: 'Endometrial', organ: 'gyn' },
-  UCS: { label: 'Uterine carcinosarcoma', organ: 'gyn' },
-};
-
-/** CPTAC names head and neck HNSCC; treat it as the same cancer type as TCGA HNSC. */
-const typeKey = (cohortId: string) => (cohortId === 'HNSCC' ? 'HNSC' : cohortId);
+import { ORGAN_SYSTEMS, ORGAN_BY_ID, CANCER_TYPES, typeKey, type OrganId } from '../data/organSystems';
 
 const sentenceCase = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
 
@@ -628,13 +585,6 @@ export function CohortListing() {
               ))}
             </ul>
           )}
-        </div>
-      </div>
-
-      <div className="border-t border-zinc-200">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-600">
-          <span>Using HistoAtlas in your research? Please cite the reference paper.</span>
-          <CopyBibtexButton className="flex items-center gap-1.5 h-7 px-2.5 rounded-md border border-zinc-200 bg-white text-zinc-700 text-xs cursor-pointer hover:border-zinc-500" />
         </div>
       </div>
 

@@ -1,7 +1,6 @@
 ---
 import { readFileSync } from 'node:fs';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../../components/astro/Breadcrumbs.astro';
 import { AtlasPageIsland } from '../../../islands/AtlasPageIsland';
 import { COHORT_FULL_NAMES } from '../../../data/cohortNames';
 import { TCGA_TO_SLUG } from '../../../data/cancerSlugs';
@@ -26,17 +25,16 @@ const displayCohort = cohort ?? 'PANCAN';
 const cohortFullName = COHORT_FULL_NAMES[displayCohort] ?? displayCohort;
 const isPancan = displayCohort === 'PANCAN';
 const datasetDisplayName = dataset?.toUpperCase() ?? 'TCGA';
-const h1Text = isPancan ? `${datasetDisplayName} Pan-Cancer` : `${datasetDisplayName} ${cohortFullName}`;
 
 const cancerSlug = TCGA_TO_SLUG[displayCohort];
 const mutationPages = cancerSlug ? getMutationPagesForCancer(cancerSlug) : [];
 
-const tier1Features = Object.keys(TIER1_SEO_CONTENT)
-  .map((name) => {
-    const entry = ALL_FEATURES.find((f) => f.name === name);
-    return entry ? { name: entry.name, displayName: entry.displayName } : null;
-  })
-  .filter((f): f is { name: string; displayName: string } => f !== null);
+const keyFeatures = Object.keys(TIER1_SEO_CONTENT).filter((name) => ALL_FEATURES.some((f) => f.name === name));
+
+const cohorts: { id: string; slideCount: number }[] = JSON.parse(
+  readFileSync(`public/api/${dataset}/cohorts.json`, 'utf-8'),
+);
+const slideCount = cohorts.find((c) => c.id === displayCohort)?.slideCount;
 ---
 
 <BaseLayout
@@ -48,54 +46,41 @@ const tier1Features = Object.keys(TIER1_SEO_CONTENT)
     { name: cohortFullName, url: `/${dataset}/${displayCohort}/atlas/` },
   ]}
 >
-  <div class="min-h-screen bg-zinc-50">
-    <!-- White header zone with breadcrumbs -->
-    <div class="bg-white">
-      <div class="max-w-7xl mx-auto px-6 pt-6">
-        <Breadcrumbs items={[{ label: datasetDisplayName, href: `/${dataset}/PANCAN/atlas/` }, { label: cohortFullName }]} />
-      </div>
-    </div>
-
-    <!-- SSR header with portal slots for React interactive widgets -->
-    <div class="bg-white border-b border-zinc-200">
-      <div class="max-w-7xl mx-auto px-6 pt-3 pb-5">
-        <div class="flex items-start justify-between gap-4">
-          <div class="min-w-0">
-            <h1 class="text-xl font-semibold text-zinc-900">{h1Text}</h1>
-            <p class="text-sm text-zinc-500 mt-1">Interactive UMAP embedding visualization for the {datasetDisplayName} {cohortFullName} cohort.</p>
-          </div>
-          <div class="flex items-center gap-3">
-            <div id="cohort-selector-slot" class="hidden md:block" style="min-width:180px;min-height:36px;"></div>
-            <div id="download-button-slot" style="min-width:120px;min-height:36px;"></div>
-          </div>
+  <div class="bg-zinc-50">
+    <!-- Server-rendered cohort header; the empty slots are filled by the React island -->
+    <section aria-label="Cohort" class="relative z-[22] bg-white border-b border-zinc-200">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 py-3.5 flex flex-col gap-2">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div class="flex items-center gap-1">
+          <h1 class="flex items-center gap-2 text-xl font-semibold text-zinc-900">
+            <a href={`/${dataset}/PANCAN/atlas/`} class="text-zinc-600 hover:text-zinc-900">{datasetDisplayName}</a>
+            <span aria-hidden="true" class="font-normal text-zinc-500">/</span>
+            {cohortFullName}
+          </h1>
+          <div id="cohort-selector-slot" class="w-8 h-8"></div>
         </div>
-        {mutationPages.length > 0 && (
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3">
-            <span class="text-xs font-medium text-zinc-500 uppercase tracking-wide">Common Mutations</span>
-            {mutationPages.slice(0, 8).map((p) => (
-              <a href={`/mutations/${p.geneSlug}/${p.cancerSlug}/`}
-                 class="text-sm text-blue-600 hover:underline">
-                {GENE_BY_SLUG[p.geneSlug]?.symbol ?? p.geneSlug.toUpperCase()} ({(p.frequency * 100).toFixed(0)}%)
-              </a>
-            ))}
-          </div>
-        )}
-        {tier1Features.length > 0 && (
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3">
-            <span class="text-xs font-medium text-zinc-500 uppercase tracking-wide">Key Histomic Features</span>
-            {tier1Features.map((f) => (
-              <a href={`/${dataset}/${displayCohort}/histomics/${encodeURIComponent(f.name)}/`}
-                 class="text-sm text-blue-600 hover:underline">
-                {f.displayName}
-              </a>
-            ))}
-          </div>
-        )}
+        <p class="flex-1 text-[13.5px] text-zinc-600 md:whitespace-nowrap">
+          Explore how {slideCount ? `${slideCount.toLocaleString('en-US')} ` : ''}{isPancan ? 'tumors' : 'slides'} cluster by tissue architecture.
+        </p>
+        <div id="atlas-actions-slot" class="flex items-center gap-2 min-h-8"></div>
       </div>
-      <div id="tab-nav-slot"></div>
-    </div>
+      <div id="atlas-stats-slot" class="min-h-7"></div>
+      {mutationPages.length > 0 && (
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span class="text-[11px] font-semibold tracking-wider uppercase text-zinc-500">Common mutations</span>
+          {mutationPages.slice(0, 8).map((p) => (
+            <a href={`/mutations/${p.geneSlug}/${p.cancerSlug}/`}
+               class="text-[12.5px] text-blue-700 hover:underline">
+              {GENE_BY_SLUG[p.geneSlug]?.symbol ?? p.geneSlug.toUpperCase()} ({(p.frequency * 100).toFixed(0)}%)
+            </a>
+          ))}
+        </div>
+      )}
+      </div>
+    </section>
+    <div id="atlas-about-slot"></div>
 
-    <AtlasPageIsland dataset={dataset} cohort={displayCohort} client:only="react" />
+    <AtlasPageIsland dataset={dataset} cohort={displayCohort} keyFeatures={keyFeatures} client:only="react" />
   </div>
 </BaseLayout>
 

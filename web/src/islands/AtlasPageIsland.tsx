@@ -5,12 +5,13 @@ import { AtlasView } from '../routes/AtlasView';
 interface AtlasPageIslandProps {
   dataset?: string;
   cohort?: string;
+  keyFeatures?: string[];
 }
 
-export function AtlasPageIsland({ dataset = 'tcga', cohort = 'PANCAN' }: AtlasPageIslandProps) {
+export function AtlasPageIsland({ dataset = 'tcga', cohort = 'PANCAN', keyFeatures }: AtlasPageIslandProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AtlasView dataset={dataset} cohort={cohort} />
+      <AtlasView dataset={dataset} cohort={cohort} keyFeatures={keyFeatures} />
     </QueryClientProvider>
   );
 }

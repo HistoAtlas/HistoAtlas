@@ -30,6 +30,24 @@
   --transition-base: 200ms;
 }
 
+/* Cohort atlas: colorblind-safe cluster palette, plot surface, H&E placeholder */
+:root {
+  --k0: #332288;
+  --k1: #88ccee;
+  --k2: #44aa99;
+  --k3: #117733;
+  --k4: #999933;
+  --k5: #ddcc77;
+  --k6: #cc6677;
+  --k7: #882255;
+  --k8: #999999;
+  --k9: #aa4499;
+  --plot-bg: #fff;
+  --plot-faint: rgb(113 113 122 / 0.16);
+  --plot-na: #c4c4c9;
+  --he-thumb: linear-gradient(135deg, #f6dcea 0%, #e6c2dd 45%, #c99ec9 100%);
+}
+
 /* Dark theme: remap the palette so existing utility classes follow the theme.
    Neutrals are the zinc scale inverted; accents move to their lighter shades. */
 :root[data-theme='dark'] {
@@ -70,6 +88,17 @@
   --color-teal-700: #2dd4bf;
   --color-lime-700: #a3e635;
   --color-sky-700: #38bdf8;
+
+  --k0: #8f84e6;
+  --k3: #3daa5c;
+  --k4: #b8b84a;
+  --k7: #c4568a;
+  --k8: #8a8a8a;
+  --k9: #c673b5;
+  --plot-bg: #131316;
+  --plot-faint: rgb(161 161 170 / 0.13);
+  --plot-na: #52525b;
+  --he-thumb: linear-gradient(135deg, #5b3a55 0%, #7a4d73 50%, #8f5f8a 100%);
 }
 
 /* Base styles */

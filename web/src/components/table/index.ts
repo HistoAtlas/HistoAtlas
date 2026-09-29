@@ -1,9 +1,0 @@
-export { DataTable } from './DataTable';
-export { DataTableHeader } from './DataTableHeader';
-export { DataTableBody } from './DataTableBody';
-export { DataTablePagination } from './DataTablePagination';
-export { FilterChips } from './FilterChips';
-export { ColumnHeaderPopover } from './ColumnHeaderPopover';
-export { DownloadDialog } from './DownloadDialog';
-export { ContinuousFilter } from './filters/ContinuousFilter';
-export { CategoricalFilter } from './filters/CategoricalFilter';
