@@ -59,10 +59,10 @@ const slideCount = cohorts.find((c) => c.id === displayCohort)?.slideCount;
           </h1>
           <div id="cohort-selector-slot" class="w-8 h-8"></div>
         </div>
-        <p class="flex-1 text-[13.5px] text-zinc-600 md:whitespace-nowrap">
+        <p class="w-full md:w-auto md:flex-1 text-[13px] md:text-[13.5px] text-zinc-600 md:whitespace-nowrap">
           Explore how {slideCount ? `${slideCount.toLocaleString('en-US')} ` : ''}{isPancan ? 'tumors' : 'slides'} cluster by tissue architecture.
         </p>
-        <div id="atlas-actions-slot" class="flex items-center gap-2 min-h-8"></div>
+        <div id="atlas-actions-slot" class="hidden md:flex items-center gap-2 min-h-8"></div>
       </div>
       <div id="atlas-stats-slot" class="min-h-7"></div>
       {mutationPages.length > 0 && (

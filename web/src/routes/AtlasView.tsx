@@ -267,27 +267,30 @@ export function AtlasView({ dataset = 'tcga', cohort = 'PANCAN', keyFeatures: ke
 
       <Slot id="atlas-stats-slot">
         <div className="flex items-center gap-x-5 gap-y-2 flex-wrap">
-          <dl className="flex gap-[18px] text-[13px] text-zinc-600">
+          <dl className="w-full md:w-auto grid grid-cols-4 gap-1.5 md:flex md:gap-[18px] text-zinc-500 md:text-zinc-600">
             {stats.map(([value, label]) => (
-              <div key={label} className="flex gap-1.5">
-                <dd className="font-semibold text-zinc-900 tabular-nums">{formatCount(value)}</dd>
-                <dt>{label}</dt>
+              <div key={label} className="flex flex-col-reverse md:flex-row-reverse md:gap-1.5">
+                <dt className="text-[11px] md:text-[13px]">
+                  <span className="max-md:hidden">{label}</span>
+                  <span className="md:hidden">{label.replace('histomic ', '')}</span>
+                </dt>
+                <dd className="text-base md:text-[13px] font-semibold text-zinc-900 tabular-nums">{formatCount(value)}</dd>
               </div>
             ))}
           </dl>
           <span className="hidden md:block w-px h-[18px] bg-zinc-200" />
-          <span className={EYEBROW}>Key features</span>
-          <div className="flex gap-1.5 flex-wrap">
+          <span className={`hidden md:inline ${EYEBROW}`}>Key features</span>
+          <div className="flex gap-1.5 md:flex-wrap max-md:w-[calc(100%+2rem)] max-md:-mx-4 max-md:px-4 max-md:overflow-x-auto scrollbar-hide">
             {keyFeatures.map((f) => {
               const active = colorBy === f.name;
               return (
-                <span key={f.name} className={`flex items-stretch h-7 rounded-md border overflow-hidden ${active ? 'border-blue-600 bg-blue-50' : 'border-zinc-200 bg-white'}`}>
+                <span key={f.name} className={`flex flex-none items-stretch h-[34px] md:h-7 rounded-md border overflow-hidden ${active ? 'border-blue-600 bg-blue-50' : 'border-zinc-200 bg-white'}`}>
                   <button
                     type="button"
                     aria-pressed={active}
                     onClick={() => toggleColor(f.name)}
                     title={`${f.description ?? f.displayName} (${f.unit}). Click to color the map.`}
-                    className="flex items-center gap-1.5 px-2 text-zinc-900 text-[12.5px] cursor-pointer"
+                    className="flex items-center gap-1.5 px-2.5 md:px-2 text-zinc-900 text-[12.5px] whitespace-nowrap cursor-pointer"
                   >
                     <span aria-hidden="true" className="w-3.5 h-2 rounded-sm" style={{ background: VIRIDIS_SWATCH }} />
                     {f.displayName}
@@ -296,7 +299,7 @@ export function AtlasView({ dataset = 'tcga', cohort = 'PANCAN', keyFeatures: ke
                     href={`/${dataset}/${cohort}/histomics/${encodeURIComponent(f.name)}/`}
                     aria-label={`Open ${f.displayName} feature page`}
                     title="Open feature page"
-                    className="flex items-center px-1.5 border-l border-zinc-200 text-zinc-600"
+                    className="hidden md:flex items-center px-1.5 border-l border-zinc-200 text-zinc-600"
                   >
                     <Icon name="arrow-right" size={13} />
                   </a>
