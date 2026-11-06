@@ -1,0 +1,32 @@
+{
+  "title": "HistoAtlas: code for an open, interpretable pan-cancer histomics resource",
+  "upload_type": "software",
+  "description": "Analysis library, Snakemake workflow, web atlas, and the scripts that regenerate every figure of the manuscript \"HistoAtlas: an open, interpretable pan-cancer histomics resource linking tissue morphology to molecular programs and clinical outcomes\" from the released tables. Model weights are not included.",
+  "creators": [
+    {
+      "name": "Bannier, Pierre-Antoine",
+      "affiliation": "Independent researcher"
+    }
+  ],
+  "license": "cc-by-nc-4.0",
+  "keywords": [
+    "computational pathology",
+    "histomics",
+    "pan-cancer",
+    "TCGA",
+    "CPTAC",
+    "tumor microenvironment"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "arXiv:2603.16587",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "10.5281/zenodo.24014110",
+      "relation": "references",
+      "resource_type": "dataset"
+    }
+  ]
+}

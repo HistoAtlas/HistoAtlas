@@ -1,0 +1,134 @@
+% main.tex -- HistoAtlas, Research Article for Patterns (Cell Press)
+% Source: arXiv preprint v1 (paper_workspace/arxiv_v1) and the v2 revision, re-checked
+% against the frozen pipeline outputs. Figures: figures/*.pdf, rebuilt from
+% figure_data/*.json by scripts/build_figures.py (see README.md).
+% Class: elsarticle "review" mode -> single column, double spaced, line numbers,
+% numbered references, which is the accepted Cell Press/Elsevier submission format.
+
+\documentclass[preprint,review,12pt]{elsarticle}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,
+            urlcolor=blue!60!black]{hyperref}
+\usepackage{microtype}
+\usepackage{lineno}
+\linenumbers
+
+\graphicspath{{figures/}}
+\sisetup{group-separator={,},group-minimum-digits=4}
+\journal{Patterns}
+\abstracttitle{Summary}
+
+\newenvironment{hlbox}
+  {\par\noindent\textbf{\large Highlights}\par\vspace{0.4em}
+   \begin{itemize}\setlength{\itemsep}{0.2em}}
+  {\end{itemize}\par\vspace{0.6em}}
+
+\newsavebox{\bpbox}
+\newenvironment{biggerpicture}
+  {\setlength{\fboxsep}{10pt}%
+   \begin{lrbox}{\bpbox}%
+   \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}%
+   \textbf{\large The bigger picture}\par\vspace{0.5em}}
+  {\end{minipage}\end{lrbox}%
+   \par\vspace{0.8em}\noindent\fbox{\usebox{\bpbox}}\par\vspace{0.8em}}
+
+\makeatletter
+\def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty
+  \def\@oddfoot{\hfil\thepage\hfil}\let\@evenfoot\@oddfoot}
+\makeatother
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{HistoAtlas: an open, interpretable pan-cancer histomics resource
+linking tissue morphology to molecular programs and clinical outcomes}
+
+\author[1]{Pierre-Antoine Bannier\corref{cor1}}
+\ead{pierreantoine.bannier@gmail.com}
+\cortext[cor1]{Lead contact and corresponding author.}
+\address[1]{Independent researcher}
+
+\begin{abstract}
+Routine hematoxylin-and-eosin pathology is the most widely collected tissue
+assay in oncology, yet quantitative morphology is rarely released as reusable
+data. HistoAtlas converts \num{6745} diagnostic whole-slide images from
+\num{6088} patients across 21 cancer types into 38 named, compartment-resolved
+morphological measurements and links each to survival, gene expression, copy
+number, pathway activity and immune state, yielding \num{487638} precomputed
+correlations and \num{5623} survival models reported with effect sizes,
+confidence intervals and declared multiple-testing families. Six sparse
+programs summarize the measurements. In \num{1095} slides from 817 patients
+profiled by an independent consortium, the measurements and their
+transcriptomic links transferred and extended to protein, with a narrow residual
+that survives adjustment for matched transcripts. HistoAtlas is searchable
+through a web atlas and a programmatic interface, and every statistic traces
+back to tissue compartments and individual cells.
+\end{abstract}
+
+\begin{keyword}
+computational pathology \sep histomics \sep pan-cancer atlas \sep
+interpretable representations \sep multimodal data integration \sep
+tumor microenvironment \sep external validation \sep FAIR data
+\end{keyword}
+
+\end{frontmatter}
+
+\begin{hlbox}
+\item 6,745 pathology slides become 38 named, compartment-resolved measurements
+\item Morphology-molecule links replicate in 1,095 slides from a second consortium
+\item Six sparse morphology programs map to pathways and to protein abundance
+\item An open atlas exposes 487,638 precomputed correlations to people and agents
+\end{hlbox}
+
+\begin{biggerpicture}
+Hematoxylin-and-eosin (H\&E) stained tissue sections are prepared for nearly
+every solid tumor diagnosed, and public cohorts such as The Cancer Genome Atlas
+pair these slides with genomic, transcriptomic and clinical data. The tissue
+features a pathologist assesses, such as tumor content, the position of immune
+cells relative to tumor epithelium, nuclear size and shape, or mitotic activity,
+are nevertheless rarely recorded quantitatively. Without such measurements, slide
+images cannot be analyzed jointly with molecular and clinical data using standard
+statistical methods.
+
+HistoAtlas defines 38 quantitative tissue measurements, each computed from
+segmented tissue compartments and classified cells by a fixed formula with a
+physical unit, and applies them to \num{6745} slides from 21 cancer types. Every
+measurement is tested against survival, gene expression, copy number, pathway
+activity and immune state within a single statistical framework: effect sizes with
+bootstrap confidence intervals, false discovery rate control within declared
+families of tests, minimum detectable effects at fixed power, and
+proportional-hazards checks for survival models. Because each value is computed
+from identified cells in identified tissue regions, any association can be
+inspected at the level of the image tiles that produced it. The measurements and
+their molecular associations were re-evaluated, without refitting, in an
+independent cohort of \num{1095} slides, where most prespecified associations
+replicated. The complete tables are released through a web atlas and a
+programmatic interface, so that new hypotheses can be checked against existing
+results without reprocessing the images. The same approach, in which expert
+visual assessments are defined as explicit measurements, their uncertainty is
+quantified and their transfer across cohorts is tested, could be applied to other
+imaging data that are currently interpreted qualitatively by specialists.
+\end{biggerpicture}
+
+\clearpage
+
+\input{sections/introduction}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/methods}
+\input{sections/declarations}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\input{sections/figure_legends}
+
+\end{document}

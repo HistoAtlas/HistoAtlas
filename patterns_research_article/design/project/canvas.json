@@ -1,0 +1,131 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-05T16:10:45Z"
+ },
+ "title": "HistoAtlas – Patterns figures",
+ "launch": {
+  "view": "canvas",
+  "page": "main"
+ },
+ "pages": [
+  {
+   "id": "main",
+   "name": "Main figures"
+  },
+  {
+   "id": "supp",
+   "name": "Supplementary figures"
+  },
+  {
+   "id": "ga",
+   "name": "Graphical abstract"
+  }
+ ],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 657.64,
+   "h": 869.33,
+   "title": "Figure 1",
+   "page": "main"
+  },
+  "Figure2.dc.html": {
+   "x": 737.64,
+   "y": 0,
+   "w": 657.64,
+   "h": 602.67,
+   "title": "Figure 2",
+   "page": "main"
+  },
+  "Figure3.dc.html": {
+   "x": 1475.28,
+   "y": 0,
+   "w": 657.64,
+   "h": 656.0,
+   "title": "Figure 3",
+   "page": "main"
+  },
+  "Figure4.dc.html": {
+   "x": 2212.92,
+   "y": 0,
+   "w": 657.64,
+   "h": 552.0,
+   "title": "Figure 4",
+   "page": "main"
+  },
+  "Figure5.dc.html": {
+   "x": 2950.56,
+   "y": 0,
+   "w": 657.64,
+   "h": 250.67,
+   "title": "Figure 5",
+   "page": "main"
+  },
+  "Figure6.dc.html": {
+   "x": 3688.2,
+   "y": 0,
+   "w": 657.64,
+   "h": 549.33,
+   "title": "Figure 6",
+   "page": "main"
+  },
+  "FigureS1.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 657.64,
+   "h": 496.0,
+   "title": "Figure S1",
+   "page": "supp"
+  },
+  "FigureS2.dc.html": {
+   "x": 737.64,
+   "y": 0,
+   "w": 657.64,
+   "h": 746.67,
+   "title": "Figure S2",
+   "page": "supp"
+  },
+  "FigureS3.dc.html": {
+   "x": 1475.28,
+   "y": 0,
+   "w": 657.64,
+   "h": 376.0,
+   "title": "Figure S3",
+   "page": "supp"
+  },
+  "FigureS4.dc.html": {
+   "x": 2212.92,
+   "y": 0,
+   "w": 657.64,
+   "h": 328.0,
+   "title": "Figure S4",
+   "page": "supp"
+  },
+  "GraphicalAbstract.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 384.0,
+   "h": 384.0,
+   "title": "Graphical abstract",
+   "page": "ga"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Figure2.dc.html",
+  "Figure3.dc.html",
+  "Figure4.dc.html",
+  "Figure5.dc.html",
+  "Figure6.dc.html",
+  "FigureS1.dc.html",
+  "FigureS2.dc.html",
+  "FigureS3.dc.html",
+  "FigureS4.dc.html",
+  "GraphicalAbstract.dc.html"
+ ],
+ "notes": {},
+ "designSystems": []
+}

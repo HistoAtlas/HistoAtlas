@@ -1,0 +1,15 @@
+# LaTeX intermediates
+*.aux
+*.fls
+*.fdb_latexmk
+*.out
+*.blg
+*.log
+*.toc
+*.synctex.gz
+# local previews
+figures/preview/
+# 600 dpi production TIFFs (about 40 MB); regenerate with scripts/export_figures.py
+figures/*.tif
+# cover letter stays local (contains internal notes)
+cover_letter.md

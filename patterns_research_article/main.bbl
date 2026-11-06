@@ -1,0 +1,545 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{bera2019}
+K.~Bera, K.~A. Schalper, D.~L. Rimm, V.~Velcheti, A.~Madabhushi, Artificial
+  intelligence in digital pathology --- new tools for diagnosis and precision
+  oncology, Nature Reviews Clinical Oncology 16~(11) (2019) 703--715.
+\newblock \href {https://doi.org/10.1038/s41571-019-0252-y}
+  {\path{doi:10.1038/s41571-019-0252-y}}.
+
+\bibitem{kather2020pancancer}
+J.~N. Kather, L.~R. Heij, H.~I. Grabsch, C.~Loeffler, A.~Echle, H.~S. Muti,
+  J.~Krause, J.~M. Niehues, K.~A.~J. Sommer, P.~Bankhead, L.~K. Kooreman,
+  J.~Schulte, N.~A. Schneider, F.~Khader, G.~M\"{u}ller-Franzes, D.~Truhn,
+  T.~Luedde, Pan-cancer image-based detection of clinically actionable genetic
+  alterations, Nature Cancer 1~(8) (2020) 789--799.
+\newblock \href {https://doi.org/10.1038/s43018-020-0087-6}
+  {\path{doi:10.1038/s43018-020-0087-6}}.
+
+\bibitem{gurcan2009}
+M.~N. Gurcan, L.~E. Boucheron, A.~Can, A.~Madabhushi, N.~M. Rajpoot, B.~Yener,
+  Histopathological image analysis: A review, IEEE Reviews in Biomedical
+  Engineering 2 (2009) 147--171.
+\newblock \href {https://doi.org/10.1109/RBME.2009.2034865}
+  {\path{doi:10.1109/RBME.2009.2034865}}.
+
+\bibitem{vanderlaak2021}
+J.~van~der Laak, G.~Litjens, F.~Ciompi, Deep learning in histopathology: the
+  path to the clinic, Nature Medicine 27~(5) (2021) 775--784.
+\newblock \href {https://doi.org/10.1038/s41591-021-01343-4}
+  {\path{doi:10.1038/s41591-021-01343-4}}.
+
+\bibitem{kandoth2013}
+C.~Kandoth, M.~D. McLellan, F.~Vandin, K.~Ye, B.~Niu, C.~Lu, M.~Xie, Q.~Zhang,
+  J.~F. McMichael, M.~A. Wyczalkowski, et~al., Mutational landscape and
+  significance across 12 major cancer types, Nature 502~(7471) (2013) 333--339.
+\newblock \href {https://doi.org/10.1038/nature12634}
+  {\path{doi:10.1038/nature12634}}.
+
+\bibitem{hoadley2014}
+K.~A. Hoadley, C.~Yau, D.~M. Wolf, A.~D. Cherniack, D.~Tamborero, S.~Ng,
+  M.~D.~M. Leiserson, B.~Niu, M.~D. McLellan, V.~Uzunangelov, et~al.,
+  Multiplatform analysis of 12 cancer types reveals molecular classification
+  within and across tissues of origin, Cell 158~(4) (2014) 929--944.
+\newblock \href {https://doi.org/10.1016/j.cell.2014.06.049}
+  {\path{doi:10.1016/j.cell.2014.06.049}}.
+
+\bibitem{li2023cptac}
+Y.~Li, E.~Porta-Pardo, C.~Tokheim, M.~H. Bailey, T.~M. Yaron, V.~Stathias,
+  Y.~Geffen, K.~J. Imbach, S.~Cao, B.~M. Ennis, et~al., Proteogenomic data and
+  resources for pan-cancer analysis, Cancer Cell 41~(8) (2023) 1397--1406.
+\newblock \href {https://doi.org/10.1016/j.ccell.2023.07.001}
+  {\path{doi:10.1016/j.ccell.2023.07.001}}.
+
+\bibitem{corces2018}
+M.~R. Corces, J.~M. Granja, S.~Shams, B.~H. Louie, D.~Gennert, T.~M. Malta,
+  J.~P. Mesirov, B.~E. Bernstein, J.~D. Buenrostro, et~al., The chromatin
+  accessibility landscape of primary human cancers, Science 362~(6413) (2018)
+  eaav1898.
+\newblock \href {https://doi.org/10.1126/science.aav1898}
+  {\path{doi:10.1126/science.aav1898}}.
+
+\bibitem{galon2006}
+J.~Galon, A.~Costes, F.~Sanchez-Cabo, A.~Kirilovsky, B.~Mlecnik,
+  C.~Lagorce-Pag\`{e}s, M.~Tosolini, M.~Camus, A.~Berger, P.~Wind, et~al.,
+  Type, density, and location of immune cells within human colorectal tumors
+  predict clinical outcome, Science 313~(5795) (2006) 1960--1964.
+\newblock \href {https://doi.org/10.1126/science.1129139}
+  {\path{doi:10.1126/science.1129139}}.
+
+\bibitem{fridman2012immune}
+W.~H. Fridman, F.~Pag\`{e}s, C.~Saut\`{e}s-Fridman, J.~Galon, The immune
+  contexture in human tumours: impact on clinical outcome, Nature Reviews
+  Cancer 12~(4) (2012) 298--306.
+\newblock \href {https://doi.org/10.1038/nrc3245} {\path{doi:10.1038/nrc3245}}.
+
+\bibitem{pages2018}
+F.~Pag\`{e}s, B.~Mlecnik, F.~Marliot, G.~Bindea, F.-S. Ou, C.~Bifulco,
+  A.~Raber, M.~Luber, J.~Shia, A.~Rockwood, et~al., International validation of
+  the consensus {Immunoscore} for the classification of colon cancer: a
+  prognostic and accuracy study, The Lancet 391~(10135) (2018) 2128--2139.
+\newblock \href {https://doi.org/10.1016/S0140-6736(18)30789-X}
+  {\path{doi:10.1016/S0140-6736(18)30789-X}}.
+
+\bibitem{saltz2018til}
+J.~Saltz, R.~Gupta, L.~Hou, T.~Kurc, P.~Singh, V.~Nguyen, D.~Samaras, K.~R.
+  Shroyer, T.~Zhao, R.~Batiste, et~al., Spatial organization and molecular
+  correlation of tumor-infiltrating lymphocytes using deep learning on
+  pathology images, Cell Reports 23~(1) (2018) 181--193.e7.
+\newblock \href {https://doi.org/10.1016/j.celrep.2018.03.086}
+  {\path{doi:10.1016/j.celrep.2018.03.086}}.
+
+\bibitem{cerami2012cbio}
+E.~Cerami, J.~Gao, U.~Dogrusoz, B.~E. Gross, S.~O. Sumer, B.~A. Aksoy,
+  A.~Jacobsen, C.~J. Byrne, M.~L. Heuer, E.~Larsson, et~al., The {cBio} cancer
+  genomics portal: An open platform for exploring multidimensional cancer
+  genomics data, Cancer Discovery 2~(5) (2012) 401--404.
+\newblock \href {https://doi.org/10.1158/2159-8290.CD-12-0095}
+  {\path{doi:10.1158/2159-8290.CD-12-0095}}.
+
+\bibitem{clark2013tcia}
+K.~Clark, B.~Vendt, K.~Smith, J.~Freymann, J.~Kirby, P.~Koppel, S.~Moore,
+  S.~Phillips, D.~Maffitt, M.~Pringle, et~al., The {Cancer Imaging Archive
+  (TCIA)}: Maintaining and operating a public information repository, Journal
+  of Digital Imaging 26~(6) (2013) 1045--1057.
+\newblock \href {https://doi.org/10.1007/s10278-013-9622-7}
+  {\path{doi:10.1007/s10278-013-9622-7}}.
+
+\bibitem{uhlen2015hpa}
+M.~Uhl\'{e}n, L.~Fagerberg, B.~M. Hallstr\"{o}m, C.~Lindskog, P.~Oksvold,
+  A.~Mardinoglu, {\AA}.~Sivertsson, C.~Kampf, E.~Sj\"{o}stedt, A.~Asplund,
+  et~al., Tissue-based map of the human proteome, Science 347~(6220) (2015)
+  1260419.
+\newblock \href {https://doi.org/10.1126/science.1260419}
+  {\path{doi:10.1126/science.1260419}}.
+
+\bibitem{uhlen2017pathology}
+M.~Uhl\'{e}n, C.~Zhang, S.~Lee, E.~Sj\"{o}stedt, L.~Fagerberg, G.~Bidkhori,
+  R.~Benfeitas, M.~Arif, Z.~Liu, F.~Edfors, et~al., A pathology atlas of the
+  human cancer transcriptome, Science 357~(6352) (2017) eaan2507.
+\newblock \href {https://doi.org/10.1126/science.aan2507}
+  {\path{doi:10.1126/science.aan2507}}.
+
+\bibitem{beck2011}
+A.~H. Beck, A.~R. Sangoi, S.~Leung, R.~J. Marinelli, T.~O. Nielsen, M.~J.
+  van~de Vijver, R.~B. West, M.~van~de Rijn, D.~Koller, Systematic analysis of
+  breast cancer morphology uncovers stromal features associated with survival,
+  Science Translational Medicine 3~(108) (2011) 108ra113.
+\newblock \href {https://doi.org/10.1126/scitranslmed.3002564}
+  {\path{doi:10.1126/scitranslmed.3002564}}.
+
+\bibitem{cooper2012}
+L.~A.~D. Cooper, J.~Kong, D.~A. Gutman, W.~D. Dunn, M.~Nalisnik, D.~J. Brat,
+  Novel genotype-phenotype associations in human cancers enabled by advanced
+  molecular platforms and computational analysis of whole slide images,
+  Laboratory Investigation 95~(4) (2015) 366--376.
+\newblock \href {https://doi.org/10.1038/labinvest.2014.153}
+  {\path{doi:10.1038/labinvest.2014.153}}.
+
+\bibitem{yu2016}
+K.-H. Yu, C.~Zhang, G.~J. Berry, R.~B. Altman, C.~R\'{e}, D.~L. Rubin,
+  M.~Snyder, Predicting non-small cell lung cancer prognosis by fully automated
+  microscopic pathology image features, Nature Communications 7 (2016) 12474.
+\newblock \href {https://doi.org/10.1038/ncomms12474}
+  {\path{doi:10.1038/ncomms12474}}.
+
+\bibitem{coudray2018}
+N.~Coudray, P.~S. Ocampo, T.~Sakellaropoulos, N.~Narula, M.~Snuderl,
+  D.~Feny\"{o}, A.~L. Moreira, N.~Razavian, A.~Tsirigos, Classification and
+  mutation prediction from non-small cell lung cancer histopathology images
+  using deep learning, Nature Medicine 24~(10) (2018) 1559--1567.
+\newblock \href {https://doi.org/10.1038/s41591-018-0177-5}
+  {\path{doi:10.1038/s41591-018-0177-5}}.
+
+\bibitem{echle2021}
+A.~Echle, N.~T. Rindtorff, T.~J. Brinker, T.~Luedde, A.~T. Pearson, J.~N.
+  Kather, Deep learning in cancer pathology: a new generation of clinical
+  biomarkers, British Journal of Cancer 124~(4) (2021) 686--696.
+\newblock \href {https://doi.org/10.1038/s41416-020-01122-x}
+  {\path{doi:10.1038/s41416-020-01122-x}}.
+
+\bibitem{schmauch2020he2rna}
+B.~Schmauch, A.~Romagnoni, E.~Pronier, C.~Saillard, P.~Maill{\'e},
+  J.~Calderaro, A.~Kamoun, M.~Sefta, S.~Toldo, M.~Zaslavskiy, T.~Clozel,
+  M.~Moarii, P.~Courtiol, G.~Wainrib, A deep learning model to predict
+  {RNA-Seq} expression of tumours from whole slide images, Nature
+  Communications 11 (2020) 3877.
+\newblock \href {https://doi.org/10.1038/s41467-020-17678-4}
+  {\path{doi:10.1038/s41467-020-17678-4}}.
+
+\bibitem{bannier2024}
+P.-A. Bannier, C.~Saillard, P.~Mann, M.~Touzot, C.~Maussion, C.~Matek,
+  N.~Kl{\"u}mper, J.~Breyer, R.~Wirtz, D.~Sikic, B.~Schmitz-Dr{\"a}ger,
+  B.~Wullich, A.~Hartmann, S.~F{\"o}rsch, M.~Eckstein, {AI} allows
+  pre-screening of {FGFR3} mutational status using routine histology slides of
+  muscle-invasive bladder cancer, Nature Communications 15 (2024) 10914.
+\newblock \href {https://doi.org/10.1038/s41467-024-55331-6}
+  {\path{doi:10.1038/s41467-024-55331-6}}.
+
+\bibitem{chen2024uni}
+R.~J. Chen, T.~Ding, M.~Y. Lu, D.~F.~K. Williamson, G.~Jaume, A.~H. Song,
+  B.~Chen, A.~Zhang, D.~Shao, M.~Shaban, et~al., Towards a general-purpose
+  foundation model for computational pathology, Nature Medicine 30~(3) (2024)
+  850--862.
+\newblock \href {https://doi.org/10.1038/s41591-024-02857-3}
+  {\path{doi:10.1038/s41591-024-02857-3}}.
+
+\bibitem{vorontsov2024virchow}
+E.~Vorontsov, A.~Bozkurt, A.~Casson, G.~Shaikovski, M.~Zelechowski,
+  K.~Severson, E.~Zimmermann, J.~Hall, N.~Tenenholtz, N.~Fusi, et~al., A
+  foundation model for clinical-grade computational pathology and rare cancers
+  detection, Nature Medicine 30~(10) (2024) 2924--2935.
+\newblock \href {https://doi.org/10.1038/s41591-024-03141-0}
+  {\path{doi:10.1038/s41591-024-03141-0}}.
+
+\bibitem{hoptimus0}
+C.~Saillard, R.~Jenatton, F.~Llinares-López, Z.~Mariet, D.~Cahané, E.~Durand,
+  J.-P. Vert,
+  \href{https://github.com/bioptimus/releases/tree/main/models/h-optimus/v0}{H-optimus-0}
+  (2024).
+\newline\urlprefix\url{https://github.com/bioptimus/releases/tree/main/models/h-optimus/v0}
+
+\bibitem{filiot2023phikon}
+A.~Filiot, R.~Gherber, A.~Olivier, P.~Jacob, L.~Fidon, G.~Mac~Grogan,
+  M.~Lacroix-Triki, M.~Sahbatou, J.~N. Kather, A.~Galtier, et~al., Scaling
+  self-supervised learning for histopathology with masked image modeling,
+  medRxiv (2023).
+\newblock \href {https://doi.org/10.1101/2023.07.21.23292757}
+  {\path{doi:10.1101/2023.07.21.23292757}}.
+
+\bibitem{filiot2024phikonv2}
+A.~Filiot, P.~Jacob, A.~Mac~Kain, C.~Saillard, Phikon-v2, a large and public
+  feature extractor for biomarker prediction, arXiv preprint (2024).
+\newblock \href {http://arxiv.org/abs/2409.09173} {\path{arXiv:2409.09173}},
+  \href {https://doi.org/10.48550/arXiv.2409.09173}
+  {\path{doi:10.48550/arXiv.2409.09173}}.
+
+\bibitem{bannier2024her2}
+P.-A. Bannier, G.~Broeckx, L.~Herpin, R.~Dubois, L.~Van~Praet, C.~Maussion,
+  F.~Deman, E.~Amonoo, A.~Mera, J.~Timbres, C.~Gillett, E.~Sawyer,
+  P.~Gazi{\'n}ska, P.~Ziolkowski, M.~Lacroix-Triki, R.~Salgado, S.~Irshad,
+  Development of a deep-learning model tailored for {HER2} detection in breast
+  cancer to aid pathologists in interpreting {HER2}-low cases, Histopathology
+  85~(3) (2024) 478--488.
+\newblock \href {https://doi.org/10.1111/his.15274}
+  {\path{doi:10.1111/his.15274}}.
+
+\bibitem{diao2021hif}
+J.~A. Diao, J.~K. Wang, W.~F. Chui, V.~Mountain, S.~C. Gullapally,
+  R.~Srinivasan, R.~N. Mitchell, B.~Glass, S.~Hoffman, S.~K. Rao,
+  C.~Maheshwari, A.~Lahiri, A.~Prakash, R.~McLoughlin, J.~K. Kerner, M.~B.
+  Resnick, M.~C. Montalto, A.~Khosla, I.~N. Wapinski, A.~H. Beck, H.~L.
+  Elliott, A.~Taylor-Weiner, Human-interpretable image features derived from
+  densely mapped cancer pathology slides predict diverse molecular phenotypes,
+  Nature Communications 12~(1) (2021) 1613.
+\newblock \href {https://doi.org/10.1038/s41467-021-21896-9}
+  {\path{doi:10.1038/s41467-021-21896-9}}.
+
+\bibitem{abel2024}
+J.~Abel, S.~Jain, D.~Gerlach, K.~Guo, B.~Ennis, G.~Almeida, H.~Kaur, J.~Barker,
+  M.~D'Angelica, M.~Hameed, et~al., {AI} powered quantification of nuclear
+  morphology in cancers enables prediction of genome instability and prognosis,
+  npj Precision Oncology 8 (2024) 134.
+\newblock \href {https://doi.org/10.1038/s41698-024-00623-9}
+  {\path{doi:10.1038/s41698-024-00623-9}}.
+
+\bibitem{liberzon2015}
+A.~Liberzon, C.~Birger, H.~Thorvaldsd\'{o}ttir, M.~Ghandi, J.~P. Mesirov,
+  P.~Tamayo, The molecular signatures database ({MSigDB}) hallmark gene set
+  collection, Cell Systems 1~(6) (2015) 417--425.
+\newblock \href {https://doi.org/10.1016/j.cels.2015.12.004}
+  {\path{doi:10.1016/j.cels.2015.12.004}}.
+
+\bibitem{adjadj2026histoplus}
+B.~Adjadj, P.-A. Bannier, G.~Horent, S.~Mandela, G.~Klajer, A.~Lyon,
+  K.~Schutte, U.~Marteau, V.~Gaury, L.~Dumont, T.~Mathieu, R.~Belbahri,
+  B.~Schmauch, E.~Durand, K.~Von~Loga, L.~Gillet, Toward comprehensive cellular
+  characterization of {H\&E} slides, Journal of Pathology Informatics 22 (2026)
+  100696.
+\newblock \href {https://doi.org/10.1016/j.jpi.2026.100696}
+  {\path{doi:10.1016/j.jpi.2026.100696}}.
+
+\bibitem{salgado2015til}
+R.~Salgado, C.~Denkert, S.~Demaria, N.~Sirtaine, F.~Klauschen, G.~Pruneri,
+  S.~Wienert, G.~Van~den Eynden, F.~L. Baehner, F.~Penault-Llorca, et~al., The
+  evaluation of tumor-infiltrating lymphocytes ({TILs}) in breast cancer:
+  recommendations by an {International TILs Working Group 2014}, Annals of
+  Oncology 26~(2) (2015) 259--271.
+\newblock \href {https://doi.org/10.1093/annonc/mdu450}
+  {\path{doi:10.1093/annonc/mdu450}}.
+
+\bibitem{galon2019immunoscore}
+J.~Galon, D.~Bruni, Approaches to treat immune hot, altered and cold tumours
+  with combination immunotherapies, Nature Reviews Drug Discovery 18~(3) (2019)
+  197--218.
+\newblock \href {https://doi.org/10.1038/s41573-018-0007-y}
+  {\path{doi:10.1038/s41573-018-0007-y}}.
+
+\bibitem{joyce2015exclusion}
+J.~A. Joyce, D.~T. Fearon, {T} cell exclusion, immune privilege, and the tumor
+  microenvironment, Science 348~(6230) (2015) 74--80.
+\newblock \href {https://doi.org/10.1126/science.aaa6204}
+  {\path{doi:10.1126/science.aaa6204}}.
+
+\bibitem{elston1991grading}
+C.~W. Elston, I.~O. Ellis, Pathological prognostic factors in breast cancer.
+  {I}. {T}he value of histological grade in breast cancer: experience from a
+  large study with long-term follow-up, Histopathology 19~(5) (1991) 403--410.
+\newblock \href {https://doi.org/10.1111/j.1365-2559.1991.tb00229.x}
+  {\path{doi:10.1111/j.1365-2559.1991.tb00229.x}}.
+
+\bibitem{perou2000}
+C.~M. Perou, T.~S{\o}rlie, M.~B. Eisen, M.~van~de Rijn, S.~S. Jeffrey, C.~A.
+  Rees, J.~R. Pollack, D.~T. Ross, H.~Johnsen, L.~A. Akslen, et~al., Molecular
+  portraits of human breast tumours, Nature 406~(6797) (2000) 747--752.
+\newblock \href {https://doi.org/10.1038/35021093}
+  {\path{doi:10.1038/35021093}}.
+
+\bibitem{allison2020erpr}
+K.~H. Allison, M.~E.~H. Hammond, M.~Dowsett, S.~E. McKernin, L.~A. Carey, P.~L.
+  Fitzgibbons, D.~F. Hayes, S.~R. Lakhani, M.~Chavez-MacGregor, J.~Perlmutter,
+  C.~M. Perou, M.~M. Regan, D.~L. Rimm, W.~F. Symmans, E.~E. Torlakovic,
+  L.~Varella, G.~Viale, T.~F. Weisberg, L.~M. McShane, A.~C. Wolff, Estrogen
+  and progesterone receptor testing in breast cancer: {ASCO/CAP} guideline
+  update, Journal of Clinical Oncology 38~(12) (2020) 1346--1366.
+\newblock \href {https://doi.org/10.1200/JCO.19.02309}
+  {\path{doi:10.1200/JCO.19.02309}}.
+
+\bibitem{liu2018tcgacdr}
+J.~Liu, T.~Lichtenberg, K.~A. Hoadley, L.~M. Poisson, A.~J. Lazar, A.~D.
+  Cherniack, A.~J. Kovatich, C.~C. Benz, D.~A. Levine, A.~V. Lee, et~al., An
+  integrated {TCGA} pan-cancer clinical data resource to drive high-quality
+  survival outcome analytics, Cell 173~(2) (2018) 400--416.e11.
+\newblock \href {https://doi.org/10.1016/j.cell.2018.02.052}
+  {\path{doi:10.1016/j.cell.2018.02.052}}.
+
+\bibitem{ellrott2018mc3}
+K.~Ellrott, M.~H. Bailey, G.~Saksena, K.~R. Covington, C.~Kandoth, C.~Stewart,
+  J.~Hess, S.~Ma, K.~E. Chiotti, M.~D. McLellan, et~al., Scalable open science
+  approach for mutation calling of tumor exomes using multiple genomic
+  pipelines, Cell Systems 6~(3) (2018) 271--281.e7.
+\newblock \href {https://doi.org/10.1016/j.cels.2018.03.002}
+  {\path{doi:10.1016/j.cels.2018.03.002}}.
+
+\bibitem{newman2015cibersort}
+A.~M. Newman, C.~L. Liu, M.~R. Green, A.~J. Gentles, W.~Feng, Y.~Xu, C.~D.
+  Hoang, M.~Diehn, A.~A. Alizadeh, Robust enumeration of cell subsets from
+  tissue expression profiles, Nature Methods 12~(5) (2015) 453--457.
+\newblock \href {https://doi.org/10.1038/nmeth.3337}
+  {\path{doi:10.1038/nmeth.3337}}.
+
+\bibitem{aran2017xcell}
+D.~Aran, Z.~Hu, A.~J. Butte, {xCell}: digitally portraying the tissue cellular
+  heterogeneity landscape, Genome Biology 18~(1) (2017) 220.
+\newblock \href {https://doi.org/10.1186/s13059-017-1349-1}
+  {\path{doi:10.1186/s13059-017-1349-1}}.
+
+\bibitem{carter2012absolute}
+S.~L. Carter, K.~Cibulskis, E.~Helman, A.~McKenna, H.~Shen, T.~Zack, P.~W.
+  Laird, R.~C. Onofrio, W.~Winckler, B.~A. Weir, et~al., Absolute
+  quantification of somatic {DNA} alterations in human cancer, Nature
+  Biotechnology 30~(5) (2012) 413--421.
+\newblock \href {https://doi.org/10.1038/nbt.2203}
+  {\path{doi:10.1038/nbt.2203}}.
+
+\bibitem{thorsson2018immune}
+V.~Thorsson, D.~L. Gibbs, S.~D. Brown, D.~Wolf, D.~S. Bortone, T.-H. Ou~Yang,
+  E.~Porta-Pardo, G.~F. Gao, C.~L. Plaisier, J.~A. Eddy, et~al., The immune
+  landscape of cancer, Immunity 48~(4) (2018) 812--830.e14.
+\newblock \href {https://doi.org/10.1016/j.immuni.2018.03.023}
+  {\path{doi:10.1016/j.immuni.2018.03.023}}.
+
+\bibitem{hoerst2024cellvit}
+F.~H\"{o}rst, M.~Rempe, L.~Heine, C.~Seibold, J.~Keyl, G.~Baldini, S.~Ugurel,
+  J.~Siveke, B.~Grunwald, J.~Egger, J.~Kleesiek, {CellViT}: Vision transformers
+  for precise cell segmentation and classification, Medical Image Analysis 94
+  (2024) 103143.
+\newblock \href {https://doi.org/10.1016/j.media.2024.103143}
+  {\path{doi:10.1016/j.media.2024.103143}}.
+
+\bibitem{amgad2024panoptils}
+M.~Amgad, R.~Salgado, L.~A.~D. Cooper, A panoptic segmentation dataset for
+  explainable scoring of tumor-infiltrating lymphocytes, npj Breast Cancer 10
+  (2024) 66.
+\newblock \href {https://doi.org/10.1038/s41523-024-00663-1}
+  {\path{doi:10.1038/s41523-024-00663-1}}.
+
+\bibitem{keren2018mibi}
+L.~Keren, M.~Bosse, D.~Marquez, R.~Angoshtari, S.~Jain, S.~Varma, S.-R. Yang,
+  A.~Kuber, D.~Druck, E.~Merritt, et~al., A structured tumor-immune
+  microenvironment in triple negative breast cancer revealed by multiplexed ion
+  beam imaging, Cell 174~(6) (2018) 1373--1387.e19.
+\newblock \href {https://doi.org/10.1016/j.cell.2018.08.039}
+  {\path{doi:10.1016/j.cell.2018.08.039}}.
+
+\bibitem{davidsonpilon2019}
+C.~Davidson-Pilon, lifelines: survival analysis in {Python}, Journal of Open
+  Source Software 4~(40) (2019) 1317.
+\newblock \href {https://doi.org/10.21105/joss.01317}
+  {\path{doi:10.21105/joss.01317}}.
+
+\bibitem{therneau2000modeling}
+T.~M. Therneau, P.~M. Grambsch, Modeling Survival Data: Extending the {Cox}
+  Model, Springer, 2000.
+\newblock \href {https://doi.org/10.1007/978-1-4757-3294-8}
+  {\path{doi:10.1007/978-1-4757-3294-8}}.
+
+\bibitem{grambsch1994}
+P.~M. Grambsch, T.~M. Therneau, Proportional hazards tests and diagnostics
+  based on weighted residuals, Biometrika 81~(3) (1994) 515--526.
+\newblock \href {https://doi.org/10.1093/biomet/81.3.515}
+  {\path{doi:10.1093/biomet/81.3.515}}.
+
+\bibitem{irwin1949}
+J.~O. Irwin, The standard error of an estimate of expectation of life, with
+  special reference to expectation of tumourless life in experiments with mice,
+  Journal of Hygiene 47~(2) (1949) 188--189.
+\newblock \href {https://doi.org/10.1017/S0022172400014443}
+  {\path{doi:10.1017/S0022172400014443}}.
+
+\bibitem{royston2006}
+P.~Royston, D.~G. Altman, W.~Sauerbrei, Dichotomizing continuous predictors in
+  multiple regression: a bad idea, Statistics in Medicine 25~(1) (2006)
+  127--141.
+\newblock \href {https://doi.org/10.1002/sim.2331}
+  {\path{doi:10.1002/sim.2331}}.
+
+\bibitem{oncokb}
+D.~Chakravarty, J.~Gao, S.~M. Phillips, R.~Kundra, H.~Zhang, J.~Wang, J.~E.
+  Rudolph, R.~Yaeger, T.~Soumerai, M.~H. Nissan, et~al., {OncoKB}: A precision
+  oncology knowledge base, JCO Precision Oncology 1 (2017) 1--16.
+\newblock \href {https://doi.org/10.1200/PO.17.00011}
+  {\path{doi:10.1200/PO.17.00011}}.
+
+\bibitem{sondka2018cgc}
+Z.~Sondka, S.~Bamford, C.~G. Cole, S.~A. Ward, I.~Dunham, S.~A. Forbes, The
+  {COSMIC} {Cancer Gene Census}: describing genetic dysfunction across all
+  human cancers, Nature Reviews Cancer 18~(11) (2018) 696--705.
+\newblock \href {https://doi.org/10.1038/s41568-018-0060-1}
+  {\path{doi:10.1038/s41568-018-0060-1}}.
+
+\bibitem{nieto2016emt}
+M.~A. Nieto, R.~Y.-J. Huang, R.~A. Jackson, J.~P. Thiery, {EMT}: 2016, Cell
+  166~(1) (2016) 21--45.
+\newblock \href {https://doi.org/10.1016/j.cell.2016.06.028}
+  {\path{doi:10.1016/j.cell.2016.06.028}}.
+
+\bibitem{barbie2009ssgsea}
+D.~A. Barbie, P.~Tamayo, J.~S. Boehm, S.~Y. Kim, S.~E. Moody, I.~F. Dunn, A.~C.
+  Schinzel, P.~Sandy, E.~Meylan, C.~Scholl, et~al., Systematic {RNA}
+  interference reveals that oncogenic {KRAS}-driven cancers require {TBK1},
+  Nature 462~(7269) (2009) 108--112.
+\newblock \href {https://doi.org/10.1038/nature08460}
+  {\path{doi:10.1038/nature08460}}.
+
+\bibitem{goldman2020xena}
+M.~J. Goldman, B.~Craft, M.~Hastie, K.~Repe{\v{c}}ka, F.~McDade, A.~Kaber,
+  J.~Banber, M.~Cline, V.~Deshpande, E.~O. Paull, et~al., Visualizing and
+  interpreting cancer genomics data via the {Xena} platform, Nature
+  Biotechnology 38~(6) (2020) 675--678.
+\newblock \href {https://doi.org/10.1038/s41587-020-0546-8}
+  {\path{doi:10.1038/s41587-020-0546-8}}.
+
+\bibitem{conover1999}
+W.~J. Conover, Practical Nonparametric Statistics, 3rd Edition, John Wiley \&
+  Sons, 1999.
+
+\bibitem{cliff1993}
+N.~Cliff, Dominance statistics: Ordinal analyses to answer ordinal questions,
+  Psychological Bulletin 114~(3) (1993) 494--509.
+\newblock \href {https://doi.org/10.1037/0033-2909.114.3.494}
+  {\path{doi:10.1037/0033-2909.114.3.494}}.
+
+\bibitem{tomczak2014}
+M.~Tomczak, E.~Tomczak, The need to report effect size estimates revisited.
+  {A}n overview of some recommended measures of effect size, Trends in Sport
+  Sciences 21~(1) (2014) 19--25.
+
+\bibitem{freedmanlane1983}
+D.~Freedman, D.~Lane, A nonstochastic interpretation of reported significance
+  levels, Journal of Business \& Economic Statistics 1~(4) (1983) 292--298.
+\newblock \href {https://doi.org/10.1080/07350015.1983.10509354}
+  {\path{doi:10.1080/07350015.1983.10509354}}.
+
+\bibitem{thorndike1953}
+R.~L. Thorndike, Who belongs in the family?, Psychometrika 18~(4) (1953)
+  267--276.
+\newblock \href {https://doi.org/10.1007/BF02289263}
+  {\path{doi:10.1007/BF02289263}}.
+
+\bibitem{hennig2007}
+C.~Hennig, Cluster-wise assessment of cluster stability, Computational
+  Statistics \& Data Analysis 52~(1) (2007) 258--271.
+\newblock \href {https://doi.org/10.1016/j.csda.2006.11.025}
+  {\path{doi:10.1016/j.csda.2006.11.025}}.
+
+\bibitem{mcinnes2018}
+L.~McInnes, J.~Healy, N.~Saul, L.~Gro{\ss}berger, {UMAP}: Uniform manifold
+  approximation and projection for dimension reduction, Journal of Open Source
+  Software 3~(29) (2018) 861.
+\newblock \href {https://doi.org/10.21105/joss.00861}
+  {\path{doi:10.21105/joss.00861}}.
+
+\bibitem{benjamini1995}
+Y.~Benjamini, Y.~Hochberg, Controlling the false discovery rate: A practical
+  and powerful approach to multiple testing, Journal of the Royal Statistical
+  Society: Series B (Methodological) 57~(1) (1995) 289--300.
+\newblock \href {https://doi.org/10.1111/j.2517-6161.1995.tb02031.x}
+  {\path{doi:10.1111/j.2517-6161.1995.tb02031.x}}.
+
+\bibitem{subramanian2005}
+A.~Subramanian, P.~Tamayo, V.~K. Mootha, S.~Mukherjee, B.~L. Ebert, M.~A.
+  Gillette, A.~Paulovich, S.~L. Pomeroy, T.~R. Golub, E.~S. Lander, J.~P.
+  Mesirov, Gene set enrichment analysis: A knowledge-based approach for
+  interpreting genome-wide expression profiles, Proceedings of the National
+  Academy of Sciences 102~(43) (2005) 15545--15550.
+\newblock \href {https://doi.org/10.1073/pnas.0506580102}
+  {\path{doi:10.1073/pnas.0506580102}}.
+
+\bibitem{phipson2010permutation}
+B.~Phipson, G.~K. Smyth, Permutation {P}-values should never be zero:
+  Calculating exact {P}-values when permutations are randomly drawn,
+  Statistical Applications in Genetics and Molecular Biology 9~(1) (2010)
+  Article 39.
+\newblock \href {https://doi.org/10.2202/1544-6115.1585}
+  {\path{doi:10.2202/1544-6115.1585}}.
+
+\bibitem{schoenfeld1983}
+D.~A. Schoenfeld, Sample-size formula for the proportional-hazards regression
+  model, Biometrics 39~(2) (1983) 499--503.
+\newblock \href {https://doi.org/10.2307/2531021} {\path{doi:10.2307/2531021}}.
+
+\bibitem{freedman1982}
+L.~S. Freedman, Tables of the number of patients required in clinical trials
+  using the logrank test, Statistics in Medicine 1~(2) (1982) 121--129.
+\newblock \href {https://doi.org/10.1002/sim.4780010204}
+  {\path{doi:10.1002/sim.4780010204}}.
+
+\bibitem{chen2010hazard}
+H.~Chen, P.~Cohen, S.~Chen, How big is a big odds ratio? {I}nterpreting the
+  magnitudes of odds ratios in epidemiological studies, Communications in
+  Statistics -- Simulation and Computation 39~(4) (2010) 860--864.
+\newblock \href {https://doi.org/10.1080/03610911003650383}
+  {\path{doi:10.1080/03610911003650383}}.
+
+\bibitem{li2009pvca}
+J.~Li, P.~R. Bushel, T.-M. Chu, R.~D. Wolfinger, Principal variance components
+  analysis: Estimating batch effects in microarray gene expression data, in:
+  A.~Scherer (Ed.), Batch Effects and Noise in Microarray Experiments: Sources
+  and Solutions, John Wiley \& Sons, 2009, pp. 141--154.
+\newblock \href {https://doi.org/10.1002/9780470685983.ch12}
+  {\path{doi:10.1002/9780470685983.ch12}}.
+
+\bibitem{moeldner2021snakemake}
+F.~M\"{o}lder, K.~P. Jablonski, B.~Letcher, M.~B. Hall, C.~H. Tomkins-Tinch,
+  V.~Sochat, J.~Forster, S.~Lee, S.~O. Twardziok, A.~Kanitz, et~al.,
+  Sustainable data analysis with {Snakemake}, F1000Research 10 (2021) 33.
+\newblock \href {https://doi.org/10.12688/f1000research.29032.3}
+  {\path{doi:10.12688/f1000research.29032.3}}.
+
+\end{thebibliography}

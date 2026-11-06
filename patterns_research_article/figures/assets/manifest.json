@@ -1,0 +1,20 @@
+{
+ "luad_thumb": "luad_thumbnail.jpg",
+ "luad_mask": "luad_compartments.png",
+ "luad_he": "luad_tile_he.jpg",
+ "luad_ov": "luad_tile_overlay.jpg",
+ "atlas": "atlas_screenshot.png",
+ "brca_mask": "brca_compartments.png",
+ "brca_140_89": "brca_140_89.jpg",
+ "brca_140_89_overlay": "brca_140_89_overlay.jpg",
+ "brca_59_24": "brca_59_24.jpg",
+ "brca_59_24_overlay": "brca_59_24_overlay.jpg",
+ "brca_128_21": "brca_128_21.jpg",
+ "brca_128_21_overlay": "brca_128_21_overlay.jpg",
+ "brca_196_93": "brca_196_93.jpg",
+ "brca_196_93_overlay": "brca_196_93_overlay.jpg",
+ "brca_122_83": "brca_122_83.jpg",
+ "brca_122_83_overlay": "brca_122_83_overlay.jpg",
+ "brca_73_77": "brca_73_77.jpg",
+ "brca_73_77_overlay": "brca_73_77_overlay.jpg"
+}

@@ -1,0 +1,514 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Cohort construction}
+\label{sec:methods:cohorts}
+
+\paragraph{Discovery cohort (TCGA).}
+Formalin-fixed, paraffin-embedded H\&E-stained diagnostic whole-slide images were
+obtained from The Cancer Genome Atlas via the Genomic Data Commons portal for 21
+solid-tumor types (Table~S1). Slides were excluded if viable tissue
+area fell below 1~mm$^2$, if severe processing artifacts were present (pen marks
+covering $>$20\% of tissue area, or out-of-focus regions), or if essential
+clinical metadata (vital status, follow-up time) were missing, leaving
+\num{6745} diagnostic slides from \num{6088} patients (312 patients contributed
+more than one slide). Slide-level descriptive analyses (the inter-measurement
+correlation geometry, the UMAP embedding and pan-cancer clustering) used all
+\num{6745} slides. To avoid pseudo-replication, every statistical association
+used one representative slide per patient, chosen by a deterministic priority
+ranking (quality-control pass status, then tissue-area adequacy, then
+tile-extraction coverage, then tile count, then slide name). Twelve further
+TCGA cancer types were excluded in their entirety because their dominant cell
+morphologies fall outside the training domain of the cell detection model
+(Table~S2). GDC file UUIDs for all \num{6745} slides are listed in
+the code repository.
+
+Matched clinical data (overall, disease-specific, disease-free and
+progression-free survival; age at diagnosis, sex, pathologic stage, tissue source
+site and tumor purity) came from the TCGA Pan-Cancer Clinical Data
+Resource~\cite{liu2018tcgacdr}. Molecular data comprised RNA-seq expression
+(RSEM-normalized), somatic mutations from the MC3 multi-caller
+ensemble~\cite{ellrott2018mc3}, copy-number variation, immune cell fractions from
+CIBERSORT~\cite{newman2015cibersort} and xCell~\cite{aran2017xcell}, tumor purity
+from ABSOLUTE~\cite{carter2012absolute}, and immune subtypes (C1--C6) from
+Thorsson et~al.~\cite{thorsson2018immune}. Molecular data were matched to slides
+by TCGA case barcode (first 12 characters); for patients with multiple aliquots
+the primary-tumor aliquot was used. Of \num{6745} slides, \num{5590} (82.9\%) had
+matched immune subtype labels.
+
+\paragraph{Validation cohort (CPTAC).}
+Diagnostic H\&E slides and matched transcriptomic, proteomic and clinical data
+were obtained for five CPTAC cancer types with TCGA counterparts: breast
+carcinoma (198 slides), lung adenocarcinoma (240), head-and-neck squamous
+carcinoma (390 slides from 112 patients), pancreatic adenocarcinoma (175) and
+endometrial carcinoma (92), totalling \num{1095} slides from 817 patients. The
+identical pipeline, model weights and feature definitions used for TCGA were
+applied without retraining, recalibration or cohort-specific tuning. For patients
+with multiple slides, one representative slide was selected by a deterministic
+priority ranking (quality-control pass status, then tissue-area adequacy, then
+tile-extraction coverage, then tile count, then fewest missing measurements, then
+slide name), and all downstream analyses were performed at patient level.
+Global tandem-mass-tag proteomics were available for four of the five types
+(head-and-neck squamous carcinoma is a GDC-only study without a proteomic
+profile).
+
+\subsection{Tissue segmentation}
+\label{sec:methods:tissue}
+
+Tissue segmentation used a CellViT-inspired architecture~\cite{hoerst2024cellvit}
+with a Phikon self-supervised ViT-B backbone~\cite{filiot2023phikon}, trained on
+the PanopTILs crowdsourced annotation dataset~\cite{liu2024panoptils}. Inference was performed at
+0.5~\textmu m/px on $224 \times 224$~pixel tiles with 32-pixel overlap, with the
+final mask obtained by majority voting in overlap regions. The model assigns nine
+tissue classes (cancerous epithelium, stroma, necrosis, normal epithelium,
+tumor-infiltrating lymphocytes, junk/debris, blood, other, whitespace); mean
+intersection-over-union was 0.72 on the PanopTILs held-out test set, with
+substantial per-class variation and near-zero recall for necrosis and normal
+epithelium in deployment, reflecting their rarity in both the training set and
+resected TCGA specimens. Following the International Immuno-Oncology Biomarker
+Working Group recommendation~\cite{salgado2015til}, regions classified as
+tumor-infiltrating lymphocytes were reassigned to stroma before all downstream
+computation, yielding five effective compartments: cancerous epithelium, stroma,
+necrosis, normal epithelium and blood.
+
+\subsection{Cell segmentation and classification}
+\label{sec:methods:cells}
+
+Cell instance segmentation and classification used
+HistoPLUS~\cite{adjadj2026histoplus}, which classifies cells into 13 types; the
+nine used here are
+tumor cells, lymphocytes, fibroblasts, plasmocytes, neutrophils, eosinophils,
+red blood cells, apoptotic bodies and mitotic figures (mean panoptic quality
+0.509; per-class 0.28 to 0.73, lowest for rare types). Inference used
+$224 \times 224$~pixel tiles at 40$\times$ magnification (0.25~\textmu m/px) when
+available, falling back to 20$\times$ (0.50~\textmu m/px); most slides were
+scanned at 40$\times$. Tiles were extracted with a 64-pixel (16~\textmu m)
+overlap margin and cells in overlap regions were deduplicated by a union-find
+procedure merging instances whose centroids fall within 10~\textmu m, roughly the
+diameter of an epithelial nucleus. The cell model was trained on pathologist
+annotations from eight cancer types (LUAD, LUSC, BRCA, COAD, BLCA, OV, PAAD,
+MESO); the remaining 13 included types were processed out of distribution.
+Tissue--cell discordance (cells inside a tissue-model tumor region not classified
+as tumor cells) ranged from 0\% to 12\% across cancer types, highest in
+pancreatic adenocarcinoma (12.2\%) despite being in distribution, plausibly
+because of dense desmoplastic stroma and small tumor glands; out-of-distribution
+types additionally showed inflated kinetic indices in prostate, liver and thyroid
+carcinoma attributable to reduced detection sensitivity. Red blood cells and
+plasmocytes were not used in measurement computation.
+
+\subsection{Spatial compartment definition}
+\label{sec:methods:spatial}
+
+All spatial computations were performed on compartment masks resampled to a
+common 8~\textmu m/px grid by nearest-neighbor interpolation, so that boundary
+quantities are scanner-invariant. Connected components below
+$A_{\min} = \num{2048}$~\textmu m$^2$ were removed per compartment before
+distance-transform computation, to prevent segmentation fragments from inflating
+boundary lengths. Five spatial bands were defined from the signed Euclidean
+distance transform $d_T$ to the tumor boundary (the outer contour of the
+cancerous epithelium mask; positive inside tumor): tumor front
+($0 \leq d_T \leq 50$~\textmu m), tumor core ($d_T > 50$~\textmu m), near stroma
+($-50 \leq d_T < 0$), far stroma ($-200 \leq d_T < -50$) and necrosis ring
+(within 100~\textmu m of the necrosis boundary). The 50~\textmu m front band
+corresponds to approximately five cell diameters; the 200~\textmu m stromal
+cutoff is a design parameter of the pipeline. Slides were assigned a growth-pattern
+regime from the tumor front fraction
+$\varphi = A(B_T^{0\text{-}50}) / A(\Omega_T)$: mass-forming
+($\varphi \leq 0.5$), intermediate ($0.5 < \varphi \leq 0.8$) or infiltrative
+($\varphi > 0.8$). Distance-based measurements are quantized at 8~\textmu m
+owing to the grid spacing.
+
+\subsection{Histomic measurement definitions}
+\label{sec:methods:features}
+
+We computed 38 quantitative histomic measurements per slide. For presentation
+they are grouped into six categories: tissue composition (3), cell densities (8),
+nuclear morphology and kinetics (7), spatial organization (11), spatial
+heterogeneity (5) and cell-type ratios (4). The atlas's machine-readable feature
+metadata uses a coarser five-way grouping of the same 38 measurements
+(composition 3, density 6, morphology 8, spatial 18, heterogeneity 3); the two
+schemes partition the identical set and no measurement differs between them.
+Complete definitions, units and both category assignments are given in
+Table~S3.
+
+Two candidate measurements (normal epithelium area fraction and tumor--normal
+contact fraction) were removed from the atlas entirely because the tissue model
+did not reliably detect normal epithelium and both showed zero signal across all
+slides. Seven ratio measurements were susceptible to unstable values when
+denominators approach zero; these were controlled by winsorization
+(\S\ref{sec:methods:preprocessing}).
+
+\subsection{Measurement preprocessing}
+\label{sec:methods:preprocessing}
+
+Preprocessing proceeded in three steps. First, 22 measurements with heavy
+right-skew (all densities, ratios, distances and heterogeneity measures) were
+log-transformed as $\log(1 + x)$. Second, all 38 were winsorized at the 0.5th and
+99.5th percentiles computed per measurement across the full cohort; global rather
+than per-cancer percentiles were used because the target artifacts (segmentation
+failures, ratio instabilities) occur across cancer types and because several
+cohorts are too small (for example cholangiocarcinoma, $n = 38$) for reliable
+percentile estimation. Third, measurements were $z$-score standardized. The scope
+of standardization varied by analysis: UMAP and $K$-means used global $z$-scores;
+Cox regression used per-cancer-type $z$-scores, so hazard ratios are per standard
+deviation within cancer type; Spearman correlations used no standardization,
+being rank-based. Missing values ($<$2\% of entries) were imputed with the
+column median before standardization. Raw values are retained for display in the
+web interface; all models consumed preprocessed values.
+
+\subsection{Survival analysis}
+\label{sec:methods:survival}
+
+Associations between each measurement and four endpoints (overall survival,
+designated primary; disease-specific, disease-free and progression-free survival)
+were assessed by Cox proportional hazards regression using
+\texttt{lifelines}~\cite{davidsonpilon2019} without penalization. Each model
+tests a single measurement plus covariates; no multivariate models combining
+several measurements are included in the atlas. Two specifications were fitted
+per measurement, cancer type and endpoint: unadjusted (measurement only) and
+adjusted (measurement, age at diagnosis, sex and pathologic stage, stratified by
+tissue source site). Stratification lets each site carry its own baseline hazard
+without consuming degrees of freedom, the standard approach for multi-center
+data~\cite{therneau2000modeling}. Pan-cancer models additionally stratified on
+cancer type, estimating one shared coefficient across per-type baseline hazards.
+Hazard ratios are reported per one standard deviation of the preprocessed
+measurement, with 95\% Wald confidence intervals from the observed Fisher
+information.
+
+For adjusted models, missing covariates were handled by multiple imputation by
+chained equations (\texttt{scikit-learn} \texttt{IterativeImputer} with Bayesian
+ridge, 5 imputations, maximum 10 iterations, seed incremented per imputation),
+pooled by Rubin's rules, with the fraction of missing information recorded. When
+covariate missingness exceeded 20\% in any variable, total sample size fell below
+30, or fewer than 3 of 5 imputations converged, complete-case analysis was used
+instead. Missingness arose mainly from incomplete staging (Table~S6). A minimum of $n \geq 30$ with $\geq$10 events was required, and models
+were fitted only when residual degrees of freedom remained positive.
+
+The proportional-hazards assumption was tested for every fitted model using
+Schoenfeld residuals with the Kaplan--Meier time transform~\cite{grambsch1994},
+flagged as pass ($P \geq 0.05$), warn ($0.01 \leq P < 0.05$) or fail
+($P < 0.01$). When the assumption was violated ($P < 0.05$, covering both warn
+and fail), the hazard ratio, confidence interval and $P$ value were invalidated,
+and the $P$ value was set to 1.0 for correction so that family size is preserved
+without inflating discoveries. Of \num{5623} fitted models, \num{5283} yielded
+valid estimates. Restricted mean survival time (RMST) differences were computed
+as an assumption-free complement, as the area under the Kaplan--Meier curve to a
+cancer-type-specific horizon (default \num{1095}~days; 2~years for pancreatic
+adenocarcinoma and mesothelioma; 5~years for thyroid and prostate carcinoma;
+Table~S7) with Irwin variance~\cite{irwin1949}, tested by
+\num{5000}-permutation inference on median-split groups with \num{1000}-resample
+percentile bootstrap intervals, requiring $n \geq 20$ with $\geq$5 per group. We
+note that dichotomization for RMST discards information relative to continuous
+methods~\cite{royston2006}. Cluster-level survival used two-sided log-rank tests
+of members against non-members.
+
+\subsection{Molecular correlations}
+\label{sec:methods:correlations}
+
+Spearman rank correlations were computed between each of the 38 measurements and
+322 molecular targets: 133 curated genes drawn from OncoKB~\cite{oncokb} and the
+COSMIC Cancer Gene Census~\cite{sondka2018cgc}, immune checkpoint targets and
+EMT/stemness markers~\cite{nieto2016emt} (Table~S4), each assessed
+for expression and copy number ($133 \times 2$); the 50 MSigDB Hallmark pathway
+scores~\cite{liberzon2015}; and 6
+CIBERSORT immune cell fraction scores. Pathway activity was computed by
+single-sample gene set enrichment analysis (\texttt{gseapy}
+1.1.12)~\cite{barbie2009ssgsea, fang2023gseapy} on the batch-corrected TCGA Pan-Cancer expression
+matrix from UCSC Xena~\cite{goldman2020xena}, excluding gene sets with fewer than
+10 genes present after intersection.
+
+Unadjusted models used \texttt{scipy.stats.spearmanr} with analytical
+$t$-approximation $P$ values, chosen over permutation to avoid $P$-value banding,
+with 95\% percentile bootstrap intervals from \num{1000} resamples.
+Covariate-adjusted models used partial Spearman correlations computed by
+rank-transforming measurement, target and covariates, residualizing the ranked
+measurement and target against ranked covariates by ordinary least squares, and
+correlating the residuals~\cite{conover1999}; $P$ values used the standard
+partial-correlation $t$ statistic with $\mathrm{df} = n - 2 - k$ for $k$
+one-hot-encoded covariate columns. Tissue source site entered as a grouped
+covariate (five most frequent sites per cancer type, remainder collapsed to
+``Other'') rather than a stratification variable, since rank residualization
+requires explicit columns. A cancer type was analyzed if $n \geq 30$; each pair
+required $n \geq 10$ non-missing observations. Per-task random seeds were derived
+deterministically from a hash of the cancer type and feature names. The analysis
+comprised \num{487638} evaluable pairs (measurements $\times$ 322 targets
+$\times$ 22 cohorts $\times$ 2 models, excluding combinations with insufficient
+data). Of these, \num{461130} involve the 38 measurements; the remaining
+\num{26508} involve three slide-level quality-control variables (missingness
+flag, number of missing measurements and number of outlying measurements) that
+were computed alongside the measurements, are released in the same table, and
+entered the same correction families.
+
+\subsection{Categorical associations}
+\label{sec:methods:categorical}
+
+Associations with categorical molecular variables (somatic mutation status,
+copy-number alteration, immune subtype) were tested per cancer type. Unadjusted
+two-group comparisons used the two-sided Mann--Whitney $U$ test with Cliff's
+$\delta$ as effect size, computed as the mean of $\mathrm{sign}(x_i - y_j)$ over
+all pairs with \num{1000}-resample bootstrap intervals (bootstrap rather than
+analytical intervals because ties violate the continuity assumption of the
+analytical variance formula~\cite{cliff1993}). Variables with more than two
+levels used the Kruskal--Wallis $H$ test with
+$\eta^2_H = (H - k + 1)/(N - k)$~\cite{tomczak2014}, floored at zero.
+Covariate-adjusted models used rank-ANCOVA with Freedman--Lane permutation
+inference~\cite{freedmanlane1983} (\num{1000} permutations of covariate-only
+residuals), with partial $\eta^2$ as effect size. Group ordering followed a fixed
+convention (mutant before wild-type, altered before neutral) so that the sign of
+Cliff's $\delta$ is interpretable across analyses. A minimum of $n \geq 30$ total
+and $\geq$5 per group was required.
+
+\subsection{Clustering and embedding}
+\label{sec:methods:clustering}
+
+Unsupervised clustering was performed at two levels. At the pan-cancer (L1)
+level, all \num{6745} slides were clustered on the full 38-dimensional
+preprocessed vector; at the cancer-specific (L2) level, clustering was performed
+within each cancer type using cancer-type-specific $z$-scores. We used $K$-means
+(\texttt{scikit-learn}, $n_{\mathrm{init}} = 10$, random state 42). For L1,
+solutions were computed for $K \in \{3, \ldots, 25\}$ and scored by silhouette,
+Calinski--Harabasz, Davies--Bouldin and gap statistics; $K = 10$ was selected on
+convergence of silhouette (local maximum), Calinski--Harabasz (plateau) and
+Davies--Bouldin (local minimum), the gap statistic favouring $K = 8$. No
+dimensionality reduction was applied before clustering, to keep cluster feature
+profiles interpretable; the effective dimensionality of 18 components at 90\%
+explained variance implies moderate redundancy, which gives correlated
+measurements proportionally more weight. For L2, $K$ was selected by the elbow
+method over $K \in [2, 8]$~\cite{thorndike1953}, yielding 69 subclusters; cancer
+types with fewer than 20 samples received a single cluster and individual
+clusters with fewer than 10 samples were dropped. Stability was assessed by 50
+iterations of 80\% subsampling without replacement, re-clustering and comparing
+to the original labels by adjusted Rand index and mean best-match Jaccard
+index~\cite{hennig2007}. Cluster names were generated from a fixed schema
+combining an immune axis label, a stromal axis label, the most extreme remaining
+measurement, and a cancer-enrichment tag where one type constitutes $\geq$40\% of
+the cluster. Two-dimensional visualization used UMAP
+($n_{\mathrm{neighbors}} = 15$, $\mathrm{min\_dist} = 0.1$, Euclidean, random
+state 42)~\cite{mcinnes2018} for display only; no inference was drawn from
+embedding coordinates and all clustering was performed in the original
+38-dimensional space.
+
+\subsection{Continuous histomic programs}
+\label{sec:methods:programs}
+
+Sparse principal component analysis (\texttt{scikit-learn} \texttt{SparsePCA},
+6 components, $\alpha = 1.0$, random state 42) was fitted on standardized
+measurements from \num{5371} TCGA patients with complete feature vectors, after
+representative-slide selection. Programs were named automatically from their
+top-three loading measurements and interpreted post hoc by Spearman correlation
+against all 50 Hallmark pathway scores in TCGA. The fitted scaler and
+decomposition were then applied unchanged to 297 CPTAC patients with complete
+feature vectors. Distributional transfer was assessed by two-sample
+Kolmogorov--Smirnov tests between TCGA and CPTAC program scores. Program--protein
+associations were computed as Spearman correlations against CPTAC tandem-mass-tag
+protein abundance (\num{2220} program--protein pairs across four cancer types).
+
+\subsection{External validation in CPTAC}
+\label{sec:methods:validation}
+
+\paragraph{Measurement concordance.}
+For each matched cancer-type pair we computed the standardized difference
+$d = (\mathrm{median}_{\mathrm{CPTAC}} - \mathrm{median}_{\mathrm{TCGA}}) /
+\mathrm{SD}_{\mathrm{TCGA}}$ per measurement over all slides of that type in each
+cohort (Figure~\ref{fig:fig4}A shows the signed value). A measurement passes at
+$|d| \leq 1.0$; a cancer type passes when more than 80\% of measurements
+($\geq 31/38$) pass. The inter-measurement correlation geometry was compared by
+computing the full $38 \times 38$ Spearman matrix separately in each cohort and
+correlating the flattened upper triangles (703 pairs) by Pearson correlation,
+with a prespecified pass criterion of $r > 0.80$.
+
+\paragraph{Association replication.}
+Ten histomic--molecular associations were prespecified from the TCGA analysis
+before CPTAC results were examined. Their CPTAC $P$ values were corrected within
+the full CPTAC correction family (approximately \num{24700} expression tests per
+model per cancer type), not within the prespecified subset, so replication is
+assessed against the same multiplicity burden as discovery. Direction
+concordance and significance replication are reported with 95\% Clopper--Pearson
+exact binomial intervals. Aggregate transfer was quantified by extracting the top
+50 correlated genes per measurement per cohort for 8 representative measurements
+across 4 matched cancer types, matching by gene symbol, and correlating the two
+cohorts' Spearman coefficients across the resulting 750 triples by Pearson
+correlation with Fisher $z$-transform intervals.
+
+\paragraph{Survival replication.}
+Eight prespecified survival hypotheses were tested. Following ICH E9 guidance for
+confirmatory tests of prespecified hypotheses, nominal (uncorrected) $P$ values
+are reported and no false-discovery correction was applied. Direction concordance
+is computed only over associations that were significant in TCGA and for which
+CPTAC had sufficient follow-up. Survival follow-up was absent or minimal in
+breast (0 patients with overall survival data), lung adenocarcinoma (25) and
+endometrial carcinoma (8), leaving pancreatic adenocarcinoma ($n = 110$) and
+head-and-neck squamous carcinoma ($n = 41$) as the only evaluable cohorts; their
+minimum detectable effects at 80\% power are HR~$\geq 1.71$ and HR~$\geq 2.45$
+respectively, so this analysis is reported as underpowered by construction.
+
+\paragraph{Cluster-structure transfer.}
+A \texttt{StandardScaler} and $K$-means model ($K = 10$) fitted on TCGA were
+applied unchanged to CPTAC by nearest-centroid prediction. Per-cluster pathway
+enrichment (Cliff's $\delta$ from Mann--Whitney $U$ tests, in-cluster versus
+out-of-cluster) was computed independently in each cohort and compared by
+Spearman correlation, both per cluster and across all 450 matched
+cluster--pathway pairs. Adjusted Rand index, normalized mutual information and
+V-measure between cluster labels and cancer type were computed in both cohorts.
+
+\subsection{Proteomics and protein-specific signal}
+\label{sec:methods:proteomics}
+
+Spearman correlations were computed between each measurement and CPTAC global
+tandem-mass-tag protein abundance in the four cancer types with proteomic
+profiles. Direction concordance between messenger RNA and protein was assessed
+over pairs significant in both modalities after correction, with
+Clopper--Pearson intervals. To determine how much of the protein signal is
+independent of transcript abundance, we computed partial Spearman correlations
+between each measurement and each protein adjusting for the matched transcript,
+using the same rank-residualization procedure as
+\S\ref{sec:methods:correlations}, over \num{14687} (measurement, gene, cancer
+type) triplets, with Benjamini--Hochberg correction applied per cancer type.
+Retention was summarized as the fraction of triplets for which the partial
+coefficient retained more than half the magnitude of the unadjusted coefficient.
+
+\subsection{Added-value analyses}
+\label{sec:methods:addedvalue}
+
+To test whether measurements carry information beyond bulk transcriptomics, Cox
+models for four target measurements were refitted with matched molecular
+covariates added to the clinical specification: \textit{CD8A}, \textit{TIGIT},
+immune subtype and leukocyte fraction for intratumoral lymphocyte density and
+tumor--lymphocyte nearest-neighbor distance;
+\textsc{hallmark\_g2m\_checkpoint} and \textit{MKI67} for mitotic index; and
+\textit{ESR1} plus PAM50 subtype for nuclear pleomorphism in breast carcinoma.
+Incremental discrimination was quantified as Harrell's concordance index for four
+nested models per cancer type (clinical only; clinical + RNA; clinical +
+histomics; clinical + RNA + histomics), summarized as the median across the 18
+cancer types with evaluable models, together with the fraction of cancer types in
+which the increment was positive. Concordance was evaluated on the data used for
+fitting, so the increments are apparent rather than cross-validated and are an
+upper bound on out-of-sample gain.
+
+\subsection{Multiple testing correction}
+\label{sec:methods:multiple}
+
+All $P$ values were corrected by the Benjamini--Hochberg
+procedure~\cite{benjamini1995} within explicitly declared families, chosen to
+pool biologically coherent tests without the conservatism of pooling unrelated
+analyses (Table~S5 gives every family definition). Survival
+families were defined per cancer type $\times$ endpoint $\times$ model, so that
+correction pools only the 38 measurement-level tests within one biological
+context; correlation families were defined per cancer type $\times$ molecular
+data type $\times$ model, giving 150 families. Every adjusted $P$ value is stored
+alongside its correction-family identifier and family size, so that any reported
+result can be re-derived. Gene set enrichment analysis used its own canonical
+false-discovery procedure based on pooled null normalized enrichment score
+distributions~\cite{subramanian2005} rather than Benjamini--Hochberg. Overall
+survival is the primary endpoint; the other three are sensitivity analyses,
+corrected independently per endpoint rather than pooled, because the endpoints
+share events and therefore violate the independence assumption of joint
+correction. Permutation $P$ values used the add-one correction of Phipson and
+Smyth~\cite{phipson2010permutation}. Bootstrap intervals used \num{1000}
+percentile resamples and were reported only when $\geq$90\% of resamples produced
+valid estimates. Unless stated otherwise, ``significant'' means
+$P_{\mathrm{adj}} < 0.05$.
+
+\subsection{Power analysis and evidence grading}
+\label{sec:methods:power}
+
+The minimum detectable effect size at 80\% power ($\alpha = 0.05$, two-sided) was
+computed for every association: by the Schoenfeld--Freedman
+approximation~\cite{schoenfeld1983, freedman1982} for survival, the Fisher
+$z$-transform for correlations, and simulation-based power curves (\num{2000}
+simulated datasets with binary search) for categorical associations. Every
+association carries an evidence badge: \textbf{strong} ($P_{\mathrm{adj}} <
+0.01$, effect above the medium-effect threshold, narrow interval, $n \geq 100$),
+\textbf{moderate} ($P_{\mathrm{adj}} < 0.05$, effect above the small-effect
+threshold, narrow or moderate interval, $n \geq 50$), \textbf{suggestive}
+($P_{\mathrm{adj}} < 0.10$ or interval excluding the null, $n \geq 30$) or
+\textbf{insufficient} ($n < 30$ or missing statistics). Thresholds for $\rho$ and $\eta^2$ follow
+Cohen~\cite{cohen1988}, those for Cliff's $\delta$ approximate Romano
+et~al.~\cite{romano2006}, and those for hazard ratios were set for this study:
+medium, HR~$\geq 1.5$ or
+$\leq 0.667$, $|\rho| \geq 0.3$, $|\delta| \geq 0.3$, $\eta^2 \geq 0.06$; small,
+HR~$\geq 1.18$ or $\leq 0.847$, $|\rho| \geq 0.1$, $|\delta| \geq 0.15$,
+$\eta^2 \geq 0.01$.
+
+\subsection{Quality control, batch effects and sensitivity analyses}
+\label{sec:methods:qc}
+
+Batch effects from tissue source site were assessed by principal variance
+component analysis~\cite{li2009pvca}, decomposing variance in the top principal
+components (explaining $\geq$80\% cumulative variance, up to 10 components) into
+site, cancer type and residual fractions using marginal one-way ANOVA $\eta^2$
+weighted by explained variance. Because site and cancer type are not orthogonal,
+marginal $\eta^2$ values can exceed 1.0 in sum; residual variance was computed as
+$\max(0, 1 - \eta^2_{\mathrm{batch}} - \eta^2_{\mathrm{bio}})$ and all three
+fractions renormalized. Silhouette analysis treated site labels as cluster
+assignments on standardized measurements (Euclidean, subsampled to \num{5000}
+slides), with scores above 0.25 flagged as moderate and above 0.5 as strong batch
+effects.
+
+Four sensitivity analyses were run. (i) A permutation null shuffled molecular
+labels within cancer type and re-ran the full production correction pipeline over
+the \num{39900} measurement $\times$ pathway $\times$ cancer-type tests for 100
+permutations. (ii) The Benjamini--Yekutieli procedure, valid under arbitrary
+dependence, was substituted for Benjamini--Hochberg; for this comparison all
+tests of a given analysis type were pooled into a single family, so its
+denominator (272 significant survival associations) differs from the production
+149-family design (260). (iii) Top correlations were recomputed with molecular
+subtype as an additional covariate (PAM50 for breast, molecular class for
+endometrial, immune subtype for pancreatic carcinoma; the lung adenocarcinoma
+driver stratification was uninformative because neither \textit{EGFR} nor
+\textit{KRAS} mutation was prevalent enough to form contrasting groups).
+(iv) Survival models for the top 10 measurements were refitted with leukocyte
+fraction as an additional covariate.
+
+\subsection{Software, reproducibility and interfaces}
+\label{sec:methods:software}
+
+All analyses were implemented in Python 3.11 and orchestrated as a directed
+acyclic graph by Snakemake~\cite{moeldner2021snakemake}, which supports a
+subsetted dry-run mode for validating the full pipeline before production runs.
+Key versions: \texttt{lifelines}~0.29.0, \texttt{scipy}~1.12.0,
+\texttt{scikit-learn}~1.4.0, \texttt{umap-learn}~0.5.5, \texttt{gseapy}~1.1.12,
+\texttt{statsmodels}~0.14.1, \texttt{numpy}~1.26.4, \texttt{pandas}~2.2.0. Every
+stochastic procedure (permutation, bootstrap, subsampling, $K$-means
+initialization, UMAP) used an explicit seed; per-task seeds in embarrassingly
+parallel stages were derived deterministically from task identifiers so that
+results do not depend on execution order. Each run writes a provenance record
+containing pipeline version, timestamps, input checksums, an output manifest and
+an automated validation report.
+
+The web interface is an Astro static site with React components; all statistical
+results, feature profiles, cluster metadata and visualization data are serialized
+to static JSON at build time, so no analysis server runs at request time. Three
+interpretability layers connect statistics to tissue: a per-slide compartment map
+rendering the five tissue compartments across nine spatial zones; for each
+measurement, the top-ranked $224 \times 224$~pixel tiles scored by that
+measurement's own computation strategy, each with slide coordinates, a scale bar
+and a toggleable cell-type overlay. The overlay renders the full set of classes
+the cell model emits (14 in the current release) for visual inspection, whereas
+the nine classes listed in \S\ref{sec:methods:cells} are those used to compute
+the measurements; the remaining classes are displayed but not quantified. The
+interface also provides bidirectional links from association
+tables to measurement pages and from measurement pages to specific tiles on
+specific slides. The same tables are exposed programmatically through 45 typed
+tools over a Model Context Protocol server, so that automated agents can issue
+the same queries as human users.
+
+\subsection{Figure preparation}
+\label{sec:methods:figures}
+
+Every figure panel was drawn from data exported directly from the frozen pipeline
+outputs (TCGA run of 9 March 2026; CPTAC run of 17 March 2026) by a single script
+(\texttt{patterns\_research\_article/scripts/export\_figure\_data.py}), which writes
+one machine-readable file per figure containing every plotted value and every
+statistic quoted in the legends. A second script
+(\texttt{build\_figures.py}) renders these files deterministically as vector
+graphics at print size, and a third (\texttt{export\_figures.py}) produces the
+submitted PDF and TIFF files; rerunning the three scripts regenerates every
+figure from the released tables. Hematoxylin-and-eosin tiles and cell-call overlays in
+Figures~\ref{fig:fig1}A and \ref{fig:fig6} are the pipeline's own image files,
+reproduced without alteration other than uniform scaling; compartment maps are
+label images in which the pipeline's class colors were remapped to the figure
+palette. Dense scatter plots are shown as two-dimensional histograms with
+logarithmic color scaling, and point clouds in Figure~\ref{fig:fig3}C are shown on
+percentile-rank scales, on which a Spearman coefficient is the Pearson coefficient
+of the plotted points.

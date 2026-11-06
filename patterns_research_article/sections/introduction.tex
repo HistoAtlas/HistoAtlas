@@ -1,0 +1,77 @@
+\section{Introduction}
+\label{sec:intro}
+
+Hematoxylin-and-eosin (H\&E) staining of tissue sections is the most widely used
+assay in cancer medicine~\cite{bera2019}. Every diagnostic
+slide records tissue composition, cell densities, nuclear morphology and the
+spatial arrangement of tumor and microenvironmental
+cells~\cite{gurcan2009, vanderlaak2021}. For genomics, transcriptomics and
+proteomics, pan-cancer resources release standardized, queryable
+tables~\cite{kandoth2013, hoadley2014, li2023cptac, corces2018}; no equivalent
+resource exists for histopathology. Diagnostic slides are archived at scale, but
+the quantities a pathologist assesses from them are rarely recorded as numerical
+data.
+
+Bulk molecular assays average over the whole sample and do not record the
+spatial organization of the tissue. Yet the density of immune cells in the tumor
+core and at the invasive margin is prognostic in several cancer
+types~\cite{galon2006, fridman2012immune, pages2018}. Saltz et~al.\ showed that
+deep learning applied to public pathology slides recovers tumor-infiltrating
+lymphocyte density at pan-cancer scale~\cite{saltz2018til}, but a density
+computed over the whole slide does not distinguish lymphocytes inside tumor
+epithelium from lymphocytes confined to the surrounding stroma, the pattern that
+defines immune exclusion. Existing public resources each cover part of the
+problem: cBioPortal provides molecular and clinical tables without quantitative
+morphology~\cite{cerami2012cbio}, the Cancer Imaging Archive provides images
+without associated statistical analyses~\cite{clark2013tcia}, and the Human
+Protein Atlas provides immunohistochemistry-based maps of individual
+proteins~\cite{uhlen2015hpa, uhlen2017pathology}, which are not available for
+routine H\&E slides.
+
+Computational pathology has made the extraction of tissue features tractable.
+Early morphometric studies linked handcrafted image features to outcome and
+molecular alterations in single cancer types~\cite{beck2011, cooper2015, yu2016}; more recent systems
+predict molecular alterations, expression programs and outcomes directly from
+H\&E~\cite{coudray2018, schmauch2020he2rna, bannier2024}, as reviewed
+in~\cite{echle2021}; and foundation models now produce tile-level embeddings
+that can be aggregated to the slide
+level~\cite{chen2024uni, vorontsov2024virchow, hoptimus0}. These results
+show that H\&E images contain substantial biological information. Foundation-model
+embeddings are information-dense representations that support many downstream
+tasks, including mutation, biomarker and outcome
+prediction~\cite{filiot2023phikon, filiot2024phikonv2, bannier2024, bannier2024her2},
+but they are not interpretable: an individual coordinate does not
+correspond to a defined tissue property, so an association found with an
+embedding cannot be attributed to specific cells or tissue regions.
+Interpretable feature sets have been proposed~\cite{diao2021hif, abel2024}, but
+no pan-cancer set of interpretable measurements has been released together with
+its molecular and clinical associations and evaluated in an independent cohort.
+
+Image statistics depend on staining protocol, scanner, fixation and case
+selection, so a measurement defined in one cohort can have a different
+distribution, and a different relationship to molecular variables, in another.
+Measurements and associations derived from The Cancer Genome Atlas (TCGA)
+therefore need to be re-estimated on slides from other institutions. The Clinical
+Proteomic Tumor Analysis Consortium (CPTAC) provides independent diagnostic slides
+with matched transcriptomic and proteomic profiles across several cancer
+types~\cite{li2023cptac}. This allows two tests: whether the measurement
+distributions and their correlations with gene expression are reproduced in an
+independent cohort, and whether the same correlations are observed at the
+protein level.
+
+Here we present HistoAtlas. From \num{6745} TCGA diagnostic slides from
+\num{6088} patients spanning 21 solid-tumor types, we derive 38 interpretable,
+compartment-resolved histomic measurements and compute their associations with
+survival, gene expression, copy number, pathway activity and immune state,
+reporting effect sizes, confidence intervals, minimum detectable effects and
+explicitly declared multiple-testing families throughout. We show that the 38
+measurements can be summarized by six continuous programs, each correlated with
+specific MSigDB Hallmark pathways~\cite{liberzon2015}; that the measurement distributions, their
+correlations with gene expression and two of the six programs are reproduced in
+\num{1095} independent CPTAC slides; that the correlations with gene expression
+are also observed at the protein level, with 132 measurement--protein
+correlations remaining significant after adjustment for the matched transcript;
+and that adding the measurements to survival models that already include
+clinical covariates and matched transcripts slightly improves discrimination. The resource is released as an interactive atlas and
+a programmatic interface, in which every reported statistic is linked to the
+tissue compartments and individual cells from which it was computed.

@@ -1,0 +1,108 @@
+\section{Discussion}
+\label{sec:discussion}
+
+HistoAtlas converts
+routine H\&E pathology into 38 named, compartment-resolved measurements, attaches
+a fully declared statistical layer to them, validates that layer in an
+independent consortium, and publishes the result as queryable infrastructure with
+provenance back to individual cells. The individual biological correspondences
+reported here are, for the most part, expected.
+
+What distinguishes this from another predictive computational-pathology system is
+what the coordinates mean. Foundation-model embeddings are information-dense inputs for predictive
+models~\cite{chen2024uni, vorontsov2024virchow}, but they are not interpretable:
+their dimensions have no units,
+cannot be compared between studies, and do not decompose into quantities a
+pathologist can check, such as lymphocyte density inside tumor epithelium or
+distance from a tumor cell to its nearest lymphocyte. Because HistoAtlas
+measurements are named, they can be given confidence intervals that mean
+something, corrected within families that can be audited, compared across
+cohorts on their own scale, and traced back to the tissue that produced them. The cost is expressive
+power: interpretable measurements will not match learned representations on pure
+predictive benchmarks.
+
+In the independent CPTAC cohort, the measurement distributions, the
+correlations between measurements and the correlations with gene expression
+were reproduced, two of six program distributions were unchanged, and
+cluster-level pathway enrichment was not reproduced. At the measurement level, four of five matched cancer types passed the
+prespecified concordance criterion and the inter-feature correlation geometry
+was preserved, so the coordinates mean approximately the same thing on tissue
+processed elsewhere. At the biological level, the strongest external evidence
+came from molecular associations rather than from survival: all ten prespecified
+histomic--transcriptomic associations replicated in direction and nine in
+significance, effect sizes were concordant across 750 matched triples, and the
+bridge extended to protein abundance with 98.8\% directional agreement among
+doubly-significant pairs. Continuous programs transferred better than discrete
+clusters, which is a useful negative result: it says that the reusable units of
+this atlas are the measurements and their sparse combinations, not any
+particular partition of feature space. Users should treat the ten-cluster
+solution as a browsing convenience.
+
+Several findings show what the layer is good for. The separation between
+intratumoral and stromal lymphocyte density quantifies a compartment effect that
+bulk tumor-infiltrating-lymphocyte scoring collapses~\cite{saltz2018til,
+galon2006}; tumor--lymphocyte distance captures immune exclusion as a
+geometric quantity rather than an impression; mitotic index tracks cell-cycle
+transcripts and proteins; nuclear pleomorphism tracks luminal differentiation
+markers, more closely at the protein level than at the transcript level, as
+estrogen-receptor biology predicts. None of these is conceptually new. The
+advance is that they are available systematically, pan-cancer, with units and
+error bars, for anyone to query.
+
+The proteomics analyses position the resource within the wider ecosystem. TCGA
+anchored pan-cancer genomics and transcriptomics; CPTAC extended it to
+proteomics~\cite{li2023cptac}; HistoAtlas adds morphology alongside them. The
+finding that histomic measurements correlate coherently with protein abundance in
+independent tissue argues that H\&E morphology is not merely a low-fidelity
+shadow of RNA. But the stricter test constrains that claim sharply: after
+adjustment for matched transcripts only 132 of \num{14687} feature--protein
+triplets remained significant, concentrated in stromal and DNA-repair markers.
+HistoAtlas is therefore not an alternative to transcriptomics or proteomics. It
+is a widely available, spatially resolved, interpretable readout that tracks
+many molecular states and adds a narrow increment beyond them. The survival
+analyses point the same way: adding a measurement to a clinical-plus-RNA model
+raised the apparent concordance index by a median of $+0.0007$ to $+0.0038$, with
+gains in only about half of individual cancer types, and two of three prognostic
+associations weakened toward the null once matched transcripts were added.
+
+For researchers, the practical value is that a question requiring morphology can
+now be asked without reprocessing images. A user can ask which measurements
+associate with a given pathway in a given cancer type, compare a candidate
+feature's behavior across 21 tumor types, check whether an association survives
+subtype adjustment, or retrieve the minimum effect a given cohort could have
+detected before concluding that a null result is informative. The atlas is also
+available as a Model Context Protocol (MCP) server, which agentic systems can
+query directly.
+
+Several limitations bound what can be concluded. All associations are
+observational and cross-sectional; none supports a causal claim. External
+validation was substantially stronger for molecular associations than for
+survival, because CPTAC follow-up was absent or minimal in the highest-priority
+validation cohorts, so clinical-outcome claims rest primarily on TCGA. The
+measurements inherit the errors of upstream segmentation: the cell model was
+trained on eight cancer types, and 13 of the 21 included types were processed
+out of distribution, with reduced detection sensitivity inflating kinetic indices
+in some of them. Median tumor nuclear irregularity shifted by 1.8 to 2.4
+standard deviations between cohorts and should not be compared across protocols.
+Molecular subtype adjustment attenuated correlations by 28\% in pancreatic
+adenocarcinoma against under 7\% in breast and endometrial carcinoma, so
+subtype-aware reporting is needed in tumors with strong molecular substructure.
+Cohort sizes are severely unequal, and 86\% of survival associations carry an
+insufficient-evidence badge, reflecting power rather than absence of signal.
+Molecular annotation is incomplete; analyzing one representative slide per
+patient discards intra-patient heterogeneity, although the 312 TCGA patients
+with several slides make it estimable in future releases; the nine-class taxonomy underlying the
+measurements does not resolve macrophage or dendritic-cell populations that
+matter for microenvironment biology, and the atlas has
+not been benchmarked against foundation-model embeddings or against hybrid
+representations that combine both.
+
+Those limitations define the next steps: additional external cohorts to map
+which measurements are protocol-robust, spatial transcriptomics as a stronger
+ground truth for compartment-resolved immune and stromal quantities, prospective
+and treatment-annotated cohorts to test clinical utility properly, and a direct
+benchmark of interpretable measurements against learned embeddings to quantify
+what interpretability costs. HistoAtlas as it stands is a reference layer: a
+standardized, externally validated, openly queryable account of what routine
+cancer pathology contains, built so that other people's questions can be asked
+of it.

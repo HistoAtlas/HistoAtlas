@@ -1,0 +1,353 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{HistoAtlas turns routine pathology into a named, compartment-resolved measurement layer}
+\label{sec:results:resource}
+
+We built HistoAtlas from \num{6745} H\&E-stained diagnostic whole-slide images
+from \num{6088} patients spanning 21 TCGA solid-tumor types
+(Table~S1). Twelve further TCGA types were excluded because their dominant cell
+morphologies fall outside the training domain of the cell detection model,
+including lymphoid, glial, melanocytic, mesenchymal, neuroendocrine, renal
+tubular and germ-cell tumors (Table~S2). Descriptive analyses of the measurement
+space use every slide; all statistical associations use one representative slide
+per patient, so that the 312 patients with several slides are not counted more
+than once.
+
+The pipeline converts each slide into quantitative morphology in two stages
+(Figure~\ref{fig:fig1}A). A tissue model assigns every region to one of five
+compartments (cancerous epithelium, stroma, necrosis, normal epithelium, blood);
+tumor and stroma together account for more than 90\% of analyzed tissue area, so
+downstream measurements can be expressed relative to biologically meaningful
+territory rather than to whole-slide area. The HistoPLUS cell
+model~\cite{adjadj2026histoplus}, which classifies cells into 13 types, then
+detects individual cells, of which nine types are used here (tumor cell,
+lymphocyte, fibroblast, plasmocyte, neutrophil, eosinophil, red blood cell,
+apoptotic body, mitotic figure), more
+than four billion cells across the cohort. Signed distance transforms from the
+tumor boundary define spatial bands, so that a lymphocyte counted inside tumor
+epithelium is not confused with one counted 150~\textmu m away in stroma. From
+these maps we derived 38 histomic measurements in six groups: tissue composition
+(3), cell densities (8), nuclear morphology and kinetics (7), spatial organization
+(11), spatial heterogeneity (5) and cell-type ratios (4) (Table~S3).
+
+Across 22 analysis cohorts (21 cancer types
+plus a pan-cancer set) we fitted \num{5623} Cox proportional hazards models
+(four endpoints, each under an unadjusted and a covariate-adjusted
+specification), of which \num{5283} yielded valid estimates after
+proportional-hazards screening, and computed \num{487638} Spearman correlations
+against messenger RNA expression, pathway activity, copy number and immune
+deconvolution scores. Benjamini--Hochberg correction was applied within declared,
+non-overlapping families (150 for correlations, defined by cancer type, molecular
+data type and model). At a false discovery rate of 0.05, 260 survival
+associations and \num{88920} molecular correlations were significant
+(\num{87217} of them involving the 38 measurements; the others involve three
+quality-control variables released in the same table; Table~S8). Every association carries an effect size, a bootstrap 95\% confidence
+interval, raw and adjusted $P$ values, a minimum detectable effect at 80\% power,
+a proportional-hazards flag where applicable, and the identifier and size of its
+correction family.
+
+Pairwise Spearman
+correlation across the 38 measurements resolves coherent modules: immune-density
+measurements form a tight positive block, nuclear morphometry clusters
+separately, and cross-module anticorrelations, such as between tumor area
+fraction and the tumor--stroma interface measurements, delineate distinct axes
+(Figure~\ref{fig:fig1}B). Principal component analysis gives an effective
+dimensionality of 18 components at 90\% explained variance, so the layer is
+compressible but not collinear. A UMAP embedding of all \num{6745} slides
+recovers expected morphological neighborhoods, with breast, liver, thyroid and
+endometrial carcinoma occupying distinct regions and squamous and adenocarcinoma
+types interleaved in the center (Figure~\ref{fig:fig1}C). Unsupervised $K$-means
+partitioning into ten pan-cancer clusters recovers groups whose cancer-type
+composition and measurement profiles are interpretable without any molecular
+input (Figure~\ref{fig:fig1}D,E), and which are enriched for distinct immune
+subtypes and Hallmark pathway states when molecular annotation is subsequently
+overlaid (Figure~S1). Two of these purely morphological groups separate
+prognostically in Cox models stratified by cancer type, so the effects are not
+restatements of tissue of origin: a low-proliferation cluster dominated by liver,
+thyroid and adrenocortical carcinoma (C2) was associated with better overall
+survival (HR $= 0.54$, 95\%~CI $[0.40, 0.73]$, $P_{\mathrm{adj}} = 6.3 \times
+10^{-4}$; 516 patients in the cluster, 108 events), and a high-interface cluster
+dominated by breast and prostate carcinoma (C8) with worse survival (HR $= 1.36$,
+95\%~CI $[1.15, 1.62]$, $P_{\mathrm{adj}} = 1.8 \times 10^{-3}$; \num{1112}
+patients, 214 events).
+
+\subsection{Six continuous morphological programs summarize the measurement space}
+\label{sec:results:programs}
+
+We applied
+sparse principal component analysis ($\alpha = 1.0$) to the 38 measurements
+across \num{5371} TCGA patients with complete measurement vectors, yielding six
+continuous programs, each loading on 29 to 33 measurements with a few dominant
+ones (Figure~\ref{fig:fig2}A). Their biological identities were not assigned in
+advance but read off from correlations with 50 MSigDB Hallmark pathway scores~\cite{liberzon2015}
+(Figure~\ref{fig:fig2}C): program~1 correlates most strongly with
+\textsc{allograft\_rejection} ($\rho = 0.59$, $n = \num{5371}$) and the
+interferon-$\gamma$ response ($\rho = 0.51$), program~2 with
+\textsc{estrogen\_response\_early} ($\rho = 0.44$) and
+\textsc{epithelial\_mesenchymal\_transition} ($\rho = 0.41$), and program~3 with
+\textsc{myc\_targets\_v1} and \textsc{g2m\_checkpoint} (both $\rho = 0.53$). We
+therefore label them immune infiltration, stromal architecture, nuclear atypia
+and proliferation, tumor density, myeloid inflammation and fibroblast biology.
+The same correspondence is
+visible at the level of individual measurements, where immune densities align
+with immune pathway signatures, nuclear morphometry and mitotic index with cell
+cycle and proliferation signatures, and stromal and interface measurements with
+the epithelial--mesenchymal transition, angiogenesis and coagulation signatures
+(Figure~S2A).
+
+\subsection{Compartment-resolved immune topology is prognostic and molecularly anchored}
+\label{sec:results:immune}
+
+Tumor-infiltrating lymphocytes are conventionally scored in the stromal
+compartment~\cite{salgado2015til}; HistoAtlas measures lymphocyte density
+separately in tumor epithelium and in stroma. Intratumoral
+lymphocyte density was associated with improved overall survival in the
+pan-cancer adjusted model (hazard ratio [HR] $= 0.87$, 95\%~CI $[0.81, 0.93]$,
+$P_{\mathrm{adj}} = 9.8 \times 10^{-4}$, $n = \num{4560}$, \num{1356} events),
+with the strongest cancer-specific effects in breast carcinoma (HR $= 0.72$,
+95\%~CI $[0.60, 0.88]$, $P_{\mathrm{adj}} = 0.018$, $n = 960$) and head-and-neck
+squamous carcinoma (HR $= 0.74$, 95\%~CI $[0.63, 0.87]$,
+$P_{\mathrm{adj}} = 3.9 \times 10^{-3}$, $n = 444$; Figure~\ref{fig:fig3}A,B).
+Stromal lymphocyte density, measured on the same slides by the same model,
+showed a weaker pan-cancer effect (HR $= 0.89$, 95\%~CI $[0.83, 0.97]$,
+$P_{\mathrm{adj}} = 0.031$, $n = \num{4561}$) and no significant effect in breast
+carcinoma (HR $= 0.93$, 95\%~CI $[0.77, 1.12]$, $P_{\mathrm{adj}} = 0.67$). The
+two compartments therefore separate: localization within tumor epithelium, not
+lymphocyte abundance alone, carries the stronger prognostic
+signal, consistent with the prognostic value of immune-cell location reported in
+colorectal cancer~\cite{galon2006, pages2018}. In most of the 18 cancer types with an
+evaluable adjusted model the intervals are wide and include 1, which is the expected
+behavior of small cohorts (Figure~S3B).
+
+The same distinction appears in the molecular data. Tumor--lymphocyte
+nearest-neighbor distance at the invasive front, a direct spatial measure of
+immune exclusion~\cite{joyce2015exclusion}, was inversely associated with
+\textit{CD8A} expression in breast carcinoma ($\rho = -0.53$, 95\%~CI
+$[-0.58, -0.48]$, $P_{\mathrm{adj}} = 1.8 \times 10^{-68}$, $n = 958$;
+Figure~\ref{fig:fig3}C), and the top gene correlates of intratumoral lymphocyte
+density are dominated by T-cell, B-cell and checkpoint transcripts
+(\textit{TIGIT}, \textit{CD3E}, \textit{CD3D}, \textit{CD79A}, \textit{PDCD1},
+\textit{CD8A}, \textit{CTLA4}), with luminal markers (\textit{ESR1},
+\textit{PGR}, \textit{CCND1}) among the strongest negative correlates
+(Figure~\ref{fig:fig3}D).
+
+\subsection{Named measurements recover proliferation, invasion and differentiation programs}
+\label{sec:results:bridge}
+
+In TCGA breast
+carcinoma, mitotic index correlated with canonical cell-cycle regulators,
+including \textit{CCNE1} ($\rho = 0.568$, 95\%~CI $[0.519, 0.617]$,
+$P_{\mathrm{adj}} = 2.7 \times 10^{-80}$, $n = 958$), \textit{PLK1}
+($\rho = 0.558$ $[0.510, 0.607]$, $P_{\mathrm{adj}} = 5.1 \times 10^{-77}$),
+\textit{AURKA} ($\rho = 0.539$, $P_{\mathrm{adj}} = 4.7 \times 10^{-71}$),
+\textit{CHEK1} ($\rho = 0.526$) and \textit{BIRC5} ($\rho = 0.520$; all
+$P_{\mathrm{adj}} < 10^{-64}$). Invasion depth, defined as the 75th percentile of
+tumor distance from the tissue boundary, aligned with an
+epithelial--mesenchymal axis (\textit{ZEB1}: $\rho = 0.318$
+$[0.262, 0.375]$, $P_{\mathrm{adj}} = 8.4 \times 10^{-23}$, $n = 957$;
+\textit{ALDH1A1}: $\rho = 0.327$, $P_{\mathrm{adj}} = 3.8 \times 10^{-24}$).
+Nuclear pleomorphism, the coefficient of variation of tumor nuclear area,
+correlated positively with proliferation genes (\textit{PLK1}:
+$\rho = 0.484$, $P_{\mathrm{adj}} = 1.4 \times 10^{-55}$) and negatively with
+luminal differentiation markers (\textit{BCL2}: $\rho = -0.374$,
+$P_{\mathrm{adj}} = 8.1 \times 10^{-32}$; \textit{ESR1}: $\rho = -0.358$,
+$P_{\mathrm{adj}} = 4.4 \times 10^{-29}$). These correspondences restate, in
+continuous and automatically measured form, relationships that underpin
+histopathological grading~\cite{elston1991grading}. Their value here
+is that they are computed identically on every slide in the atlas, so they can
+be compared across 21 cancer types rather than asserted one tumor type at a time.
+Across all molecular data types the coupling is strongest for expression and
+pathway activity and weakest for copy number: 80\% of pan-cancer adjusted
+expression correlations and 83\% of pathway correlations were significant,
+against 52\% for copy number (Figure~S2B).
+
+\subsection{The measurement layer and its molecular links transfer to an independent consortium}
+\label{sec:results:transfer}
+
+Portability was assessed on \num{1095} CPTAC slides from 817 patients across five
+cancer types with TCGA counterparts: breast ($n = 198$ slides), lung
+adenocarcinoma ($n = 240$), head-and-neck squamous carcinoma (390 slides from 112
+patients), pancreatic adenocarcinoma ($n = 175$) and endometrial carcinoma
+($n = 92$).
+
+For each cancer type we computed the standardized difference between cohort
+medians, in units of the TCGA standard deviation, for each measurement, with a
+prespecified criterion of at least 31 of 38 measurements within one standard
+deviation. Four of five types passed: lung adenocarcinoma and pancreatic
+adenocarcinoma at 34/38 (89.5\%), head-and-neck at 32/38 (84.2\%) and breast at
+31/38 (81.6\%); endometrial carcinoma narrowly missed at 30/38 (78.9\%), driven by
+tissue-composition shifts in the smallest cohort ($n = 92$ versus $n = 459$ in
+TCGA; Figure~\ref{fig:fig4}A; Table~S9). The inter-measurement correlation
+geometry was preserved across cohorts (Pearson $r = 0.84$ over the 703
+upper-triangle pairs, $P < 10^{-180}$; Table~S9), indicating that the 38
+measurements span the same latent morphological space in independent tissue.
+
+The morphology-to-transcriptome bridge replicated. All ten prespecified
+histomic--molecular associations matched in direction and nine remained
+significant after correction within the full CPTAC family of approximately
+\num{24700} tests per model per cancer type, including mitotic index with
+\textit{PLK1} in lung adenocarcinoma ($\rho = 0.505$,
+$P_{\mathrm{adj}} = 5.0 \times 10^{-5}$), invasion depth with \textit{ZEB1} in
+breast carcinoma ($\rho = 0.319$, $P_{\mathrm{adj}} = 4.6 \times 10^{-3}$) and
+nuclear pleomorphism with \textit{ESR1} ($\rho = -0.389$,
+$P_{\mathrm{adj}} = 2.7 \times 10^{-4}$) and \textit{BCL2}
+($\rho = -0.416$, $P_{\mathrm{adj}} = 7.7 \times 10^{-5}$). Beyond the
+prespecified set, effect sizes were concordant at scale. Across 750 matched
+feature--gene--cancer triples drawn from each cohort's strongest correlates, the
+two cohorts' Spearman coefficients correlated at Pearson $r = 0.787$ (95\%~CI
+$[0.758, 0.813]$, $P = 4.0 \times 10^{-159}$), with mean $|\rho|$ modestly
+attenuated in CPTAC (0.251 versus 0.301). Across all \num{25155} evaluable
+measurement--gene pairs, most of which are near zero in both cohorts, the
+correlation was $r = 0.56$ (Figure~\ref{fig:fig4}B), as expected when weak
+associations are estimated in small cohorts.
+
+Program transfer was mixed in an informative way. Projecting the six
+TCGA-fitted programs into 297 CPTAC patients with complete measurement vectors,
+two-sample Kolmogorov--Smirnov tests showed no significant distributional shift
+for the immune program ($D = 0.072$, $P = 0.10$) or the fibroblast program
+($D = 0.064$, $P = 0.19$), a borderline shift for the stromal program
+($D = 0.096$, $P = 0.010$), and larger shifts for the remaining three
+($D = 0.15$ to $0.34$, $P < 10^{-4}$; Figure~\ref{fig:fig2}B). The programs also
+validated at the protein level: the immune program tracked CXCL9
+($\rho = 0.85$), CD79A ($\rho = 0.82$) and CD3E ($\rho = 0.78$) protein
+abundance, and the stromal program tracked ZEB1 ($\rho = 0.72$) and FN1
+($\rho = 0.71$), across \num{2220} program--protein pairs in four cancer types
+(Table~S10). By contrast, transferring the ten hard cluster labels by
+nearest-centroid assignment reproduced pathway enrichment only weakly (Spearman
+$\rho = 0.15$, $P = 1.4 \times 10^{-3}$ across 450 cluster--pathway pairs), with
+three of nine evaluable clusters concordant ($\rho = 0.38$ to $0.51$) and two
+inverted ($\rho = -0.59$ and $-0.65$; Figure~S4). Adjusted Rand index between
+cluster labels and cancer type was low in both cohorts (0.14 in TCGA, 0.07 in
+CPTAC), confirming that the clusters capture morphology beyond tissue of origin.
+
+\subsection{The bridge extends to protein, and the information added beyond bulk omics is incremental}
+\label{sec:results:protein}
+
+CPTAC's matched proteomics allowed the bridge to be tested one layer further
+out. Across \num{14687} measurement--gene pairs with both messenger RNA and protein
+measured, the two modalities' coefficients correlated at $r = 0.63$
+(Figure~\ref{fig:fig4}C). Among the 320 pairs significant in both, directional
+concordance was 98.8\% (316/320, 95\%~CI $[96.8\%, 99.7\%]$), and the median
+protein-minus-RNA difference in effect size was essentially zero
+($\Delta\rho = -0.007$). Protein was therefore not globally stronger than RNA,
+but it was specifically stronger for markers where post-translational biology
+dominates: nuclear pleomorphism tracked ESR1 protein more closely than
+\textit{ESR1} transcript in breast carcinoma ($\rho = -0.440$ versus $-0.389$),
+consistent with estrogen receptor protein being the phenotypic determinant of
+luminal differentiation~\cite{allison2020erpr}, and stromal
+measurements tracked vimentin protein more closely than transcript
+($\rho = 0.578$ versus $0.344$). Mitotic index tracked cell-cycle proteins in
+lung adenocarcinoma (MKI67, CDK1, TOP2A, CHEK1, PLK1), and intratumoral lymphocyte
+density tracked CD79A, CD3E, GZMA, PRF1, GZMB and IDO1 protein in breast
+carcinoma. Of the four biological axes probed by this triangulation, proliferation markers
+are supported in all four lines of evidence, immune and hormonal markers in three
+or four, and epithelial--mesenchymal markers mainly in TCGA transcripts and CPTAC
+protein (Figure~\ref{fig:fig4}D).
+
+Because protein abundance is largely set by transcript abundance, we asked how
+much of this signal is protein-specific. Partial Spearman correlations between
+each measurement and each protein, adjusting for the matched transcript, left
+132 of \num{14687} triplets significant after correction (0.9\%), 120 of them in
+breast carcinoma, including stromal and DNA-repair markers such as VIM
+(Figure~\ref{fig:fig5}C); 77\% of protein correlations retained more than half
+their magnitude after adjustment. Immune proteins such as CD8A and GZMB were
+largely absorbed.
+
+The same question can be asked of the survival results, and gives a
+correspondingly measured answer. For each of three measurements we refitted the
+strongest clinical Cox model with matched molecular covariates added
+(\textit{CD8A}, \textit{TIGIT}, immune subtype and leukocyte fraction for the
+immune measurements; the \textsc{g2m\_checkpoint} score and \textit{MKI67} for
+mitotic index; Figure~\ref{fig:fig5}A). The hazard ratio for intratumoral
+lymphocyte density in head-and-neck carcinoma was essentially unchanged (0.76 to
+0.72, still significant), whereas the hazard ratios for tumor--lymphocyte
+distance in cervical carcinoma (1.34 to 1.18) and mitotic index in mesothelioma
+(2.00 to 1.40) moved toward 1 and were no longer significant, so part of those
+associations is carried by the matched transcripts. Adding a measurement to a clinical-plus-RNA model raised Harrell's
+apparent (in-sample) concordance index by a median of $+0.0007$ to $+0.0027$ across the 18 evaluable
+cancer types for the three pan-cancer measurements ($+0.0038$ for nuclear
+pleomorphism, tested in breast carcinoma only), and the increment was positive in
+only 50\% to 61\% of individual cancer types; in
+breast carcinoma, the largest cohort, intratumoral lymphocyte density added
+$+0.008$ over clinical covariates plus \textit{CD8A} (Figure~\ref{fig:fig5}B).
+
+\subsection{Calibration and sensitivity analyses mark where the atlas is reliable}
+\label{sec:results:calibration}
+
+Because HistoAtlas is meant to be reused, we characterized where its outputs are
+stable and where they are not. Under a permutation null in which molecular
+labels were shuffled within cancer type and the full production correction
+pipeline was re-run (100 permutations over the \num{39900} measurement $\times$
+pathway $\times$ cancer-type tests), the mean null discovery rate was
+$1 \times 10^{-6}$ against an observed rate of 26.7\%
+(empirical $P = 0.0099$, the smallest attainable with 100 permutations), so the
+discovery rate is not a trivial consequence of sample size. Replacing
+Benjamini--Hochberg with the more conservative Benjamini--Yekutieli procedure,
+which permits arbitrary dependence among tests, retained 68.1\% of significant
+correlations and 54.0\% of significant survival associations under a single
+pooled correction family (Table~S11).
+
+Targeted sensitivity analyses locate the confounders that matter. Adjusting for
+molecular subtype attenuated the leading histomic--molecular correlations by
+4.3\% in median $|\rho|$ in breast carcinoma and 6.2\% in endometrial carcinoma,
+but by 28\% in pancreatic adenocarcinoma, where immune subtype carries much more
+of the signal (Table~S12). Adjusting survival models for leukocyte fraction did
+not erase the leading prognostic associations; slightly more measurements reached
+significance afterwards (28/179 versus 25/179), indicating that they are not
+simply surrogates for immune content (Table~S13). Batch effects from tissue
+source site were present but not dominant: pan-cancer variance decomposition
+attributed 44.7\% of variance to source site, 32.7\% to cancer type and 22.6\% to
+residual, while within the 20 cancer types with several sites, source site
+accounted for a median of 21.3\%, and all per-cancer silhouette scores by source
+site were negative (Figure~S3A). Statistical power is the binding constraint in
+small cohorts: breast carcinoma can detect HR~$\geq 1.62$ at 80\% power, whereas
+cholangiocarcinoma ($n = 36$) requires HR~$\geq 3.75$, which is why \num{4846} of
+\num{5623} survival associations carry an \emph{insufficient} evidence badge
+(Figure~S3B).
+
+Some measurements are more protocol-sensitive than others. Median tumor nuclear
+irregularity shifted systematically between cohorts in all five matched cancer
+types (standardized difference 1.8 to 2.4 TCGA standard deviations, largest in
+lung adenocarcinoma; Figure~\ref{fig:fig4}A), a scale of shift that would
+distort any cross-cohort comparison of that measurement. The atlas flags it
+accordingly. Taken together, these analyses argue that HistoAtlas should be
+consumed as a calibrated resource rather than an undifferentiated catalog: the
+measurement layer is portable, the continuous programs are more reliable
+cross-cohort units than the hard clusters, and the strongest claims are those
+supported simultaneously by TCGA discovery, CPTAC replication and sensitivity
+analyses that bound the plausible confounders.
+
+\subsection{An open atlas makes pan-cancer morphology reusable by people and by machines}
+\label{sec:results:atlas}
+
+The statistical layer described above is released, not summarized. HistoAtlas is
+served as a static web application at
+\href{https://histoatlas.com}{histoatlas.com}, backed by precomputed JSON so
+that no analysis server is required at runtime, and as a machine-queryable
+interface exposing 45 typed tools over the same tables. A user can enter from
+any of four directions: a measurement (what does intratumoral lymphocyte density
+predict, and where), a cancer type (which measurements matter here), a molecular
+entity (which morphologies track \textit{ESR1}), or a slide (what does this case
+look like relative to the cohort). Each association is displayed with its effect
+size, confidence interval, adjusted $P$ value, evidence badge, minimum
+detectable effect, correction-family size and proportional-hazards status, so
+that a weak result is legible as weak rather than merely present. Measurement
+tables, per-slide values, cluster assignments and the full association tables
+are downloadable.
+
+Selecting a survival association leads to the measurement's definition
+(Figure~\ref{fig:fig6}), from
+there to the per-slide compartment map on which it was computed, and from there
+to the individual image tiles that contributed most to the value, overlaid with
+the cell-level predictions that generated them. The contrast between
+intratumoral and stromal lymphocyte density in breast carcinoma is, at the top
+of the stack, two hazard ratios (Figure~\ref{fig:fig6}B); at the bottom it is
+the tiles that drive each score on one slide (Figure~\ref{fig:fig6}C,D). The
+same view also exposes what a number hides: the third-ranked intratumoral tile on
+this slide is dominated by fibroblasts rather than lymphocytes, a case a user can
+see, question and report. A user who distrusts a number can look at the cells
+behind it, which is not possible for a resource built on learned embeddings.
+The programmatic interface exposes the same objects as structured tool calls,
+so the atlas can also be queried by automated agents conducting systematic
+hypothesis generation rather than only by humans browsing pages.
